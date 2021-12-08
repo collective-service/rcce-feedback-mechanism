@@ -180,18 +180,11 @@ h2 {
   }
 }
 
-.btn-success {
+.btn-tertiary {
   float: right;
-  background-color: #2f9c67;
-  height: 24px;
-  padding: 2px;
-  :hover,
-  :active,
-  :focus {
-    background-color: #2f9c67;
-    box-shadow: #2f9c67;
-  }
-  // border: #ccc;
+  // background-color: #2f9c67;
+  padding: 0 5px 0 5px;
+  color: #d1021a;
 }
 // table content font
 #datatable.dataTable td {
@@ -253,3 +246,72 @@ a {
 //     float: right;
 //   }
 // }
+
+.emergencyFilter {
+  padding: 0 10px 0 10px;
+  #covid {
+    background-color: #d90368;
+    border-color: #d90368;
+  }
+  #ebola {
+    background-color: #e27093;
+    border-color: #e27093;
+  }
+  #ohterOutbreak {
+    background-color: #e996ad;
+    border-color: #e996ad;
+  }
+  .btn {
+    padding: 0 5px 0 5px;
+  }
+}
+.focusFilter {
+  #perception {
+    background-color: #2f9c67;
+    border-color: #2f9c67;
+  }
+  #rumors {
+    background-color: #546b89;
+    border-color: #546b89;
+  }
+  #questions {
+    background-color: #798ba5;
+    border-color: #798ba5;
+  }
+  #others {
+    background-color: #a6b0c3;
+    border-color: #a6b0c3;
+  }
+  .btn {
+    padding: 0 5px 0 5px;
+  }
+}
+
+.alert {
+  padding: 0 5px 0 5px;
+  color: #fff;
+  margin-right: 5px;
+}
+
+// focus
+.tag-covid-19 {
+  background-color: #d90368;
+}
+.tag-ebola {
+  background-color: #e27093;
+}
+.tag-emergency-other {
+  background-color: #9d9fa2;
+}
+.tag-perception {
+  background-color: #2f9c67;
+}
+.tag-rumors {
+  background-color: #546b89;
+}
+.tag-questions {
+  background-color: #798ba5;
+}
+.tag-purpose-other {
+  background-color: #dbdee6;
+}

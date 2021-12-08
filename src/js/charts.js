@@ -1,3 +1,7 @@
+let purposeArr = ['Perception', 'Rumors', 'Questions'],
+    purposeOtherArr = ['suggestions', 'Complaints', 'Accountability'],
+    emergencyArr = ['COVID-19', 'Ebola', 'Dengue'],
+    emergencyOtheArr = ['Protection', 'Migrant', 'Refugeees'];
 // colors 
 let ifrcPink_1 = '#D90368', ifrcPink_2 = '#E27093', ifrcPink_3 = '#E996AD', ifrcPink_4 = '#F0BDC9', ifrcPink_5 = '#FAE7EA';
 let ifrcGreen_1 = '#2F9C67', ifrcGreen_2 = '#78B794', ifrcGreen_3 = '#9EC8AE', ifrcGreen_4 = '#C2DACA', ifrcGreen_5 = '#E9F1EA';
@@ -58,6 +62,32 @@ function regionSelectionDropdown(){
     $('#regionSelect').append(options);
 }//regionSelectionDropdown
 
+// returns a formatted array with purposes/emergencies 
+function getFormattedColumn(item, column){
+    var items = [] ;
+    var arr = item.split(",");
+    var trimedArr = arr.map(x => x.trim());
+    for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
+        if (trimedArr[index]) {
+            items.push(trimedArr[index])
+        }
+    }
+    var formatedPurposes = "";
+    items.forEach(d => {
+        var className = d.toLowerCase();
+        var arrPurpose = ['perception', 'rumors', 'questions'];
+        var arrFocus = ['covid-19', 'ebola'];
+        if (column == 'Purpose') {
+            arrPurpose.includes(className) ? '' : className = 'purpose-other';
+        } else{
+            arrFocus.includes(className) ? '' : className = 'emergency-other';
+        }
+        
+        formatedPurposes +='<label class="alert tag-'+className+'">'+d+'</label>';
+    });
+    return formatedPurposes;
+} // getFormattedColumn
+
 function getDataTableData(data = filteredCfmData){
     var dtData = [];
     data.forEach(element => {
@@ -66,17 +96,15 @@ function getDataTableData(data = filteredCfmData){
         element['Status'] == "Pipeline" ? cfmstatusColor =  ifrcGreen_3 : null;
         dtData.push([
                     '<i class="fa fa-circle fa-md" style="color:'+cfmstatusColor+';"></i>',
-                    element['Country'], element['Organisation Name'], 
-                    element['Perception'] != "" ? element['Perception'] : "-", 
-                    element['Suggestions'] != "" ? element['Suggestions'] : "-", 
-                    element['Rumors'] != "" ? element['Rumors'] : "-", 
-                    element['Questions'] !="" ? element['Questions'] : "-", 
-                    element['Complaints'] != "" ? element['Complaints'] : "-", 
-                    element['Accountability'] != "" ? element['Accountability'] : "-", 
+                    element['Country'], 
+                    element['Organisation Name'],  
+                    getFormattedColumn(element['Purpose'], 'Purpose'),
+                    getFormattedColumn(element['Emergency'], 'Emergency'),
                     //link with icone
                     element['Link'] != "" ? '<a href="'+element['Link']+'" target="blank"><i class="fa fa-download fa-sm"></i></a>' : "-"
         ]);
     });
+
     return dtData;
 }
 
@@ -85,15 +113,24 @@ function generateDataTable(){
     var dtData = getDataTableData();
     datatable = $('#datatable').DataTable({
         data : dtData,
-        // "columns": [
-        //     {"width": "1%"},
-        //     {"width": "1%"},
-        //     {"width": "1%"},
-        //     {"width": "1%"},
-        //     {"width": "80%"},
-        //     {"width": "1%"},
-        //     {"width": "1%"}
-        // ],
+        "columns": [
+            {"width": "1%"},
+            {"width": "15%"},
+            {"width": "15%"},
+            {"width": "50%"},
+            {"width": "50%"},
+            {"width": "1%"}
+        ],
+        "columnDefs": [
+            {
+                "className": "dt-head-left",
+                "targets": "_all"
+            },
+            {
+                "defaultContent": "-",
+                "targets": "_all"
+            }
+        ],
         "pageLength": 10,
         "bLengthChange": false,
         "pagingType": "simple_numbers",
@@ -113,55 +150,55 @@ function generateBarChart(){
         arrX.includes(element.key) ? '' : arrX.push(element.key);
         arrY.includes(element.key) ? '' : arrY.push(element.value);
     });
-	var chart = c3.generate({
-		bindto: '#statusChart',
-		size: { height: 100 },
-		// padding: {right: 10, left: 180},
-	    data: {
-	        x: 'x',
-	        columns: [arrX, arrY],
-	        type: 'bar'
-	    },
-	    bar: {
-	    	width: 10
-	    },
-	    color: {
-	    	pattern: [ifrcGreen_2]
-	    },
-	    axis: {
-	        rotated : true,
-	      x: {
-	          type : 'category',
-	          tick: {	          	
+    var chart = c3.generate({
+        bindto: '#statusChart',
+        size: { height: 100 },
+        // padding: {right: 10, left: 180},
+        data: {
+            x: 'x',
+            columns: [arrX, arrY],
+            type: 'bar'
+        },
+        bar: {
+            width: 10
+        },
+        color: {
+            pattern: [ifrcGreen_2]
+        },
+        axis: {
+            rotated : true,
+          x: {
+              type : 'category',
+              tick: {               
                 outer: false,
                 multiline: false,
                 fit: true,}
-	      },
-	      y: {
-	      	tick: {
-	      		outer: false,
-	      		format: d3.format('d'),
-	      		count: 3
-	      	}
-	      } 
-	    },
-	    // grid: {
-	    //   	y: {
-	    //   		show: true
-	    //   	}
-	    // },
-	    legend: {
-	    	show: false
-	    },
-	    tooltip: {
-	    	format: {
-	    		value: function(value){
-	    			return d3.format('d')(value)
-	    		}
-	    	}
-	    }
-	}); 
-	return chart;
+          },
+          y: {
+            tick: {
+                outer: false,
+                format: d3.format('d'),
+                count: 3
+            }
+          } 
+        },
+        // grid: {
+        //      y: {
+        //          show: true
+        //      }
+        // },
+        legend: {
+            show: false
+        },
+        tooltip: {
+            format: {
+                value: function(value){
+                    return d3.format('d')(value)
+                }
+            }
+        }
+    }); 
+    return chart;
 } //generateBarChart 
 
 // return mapActiveColor, mapInactiveColor or mapPipelineColor based on the corresponding status
@@ -244,5 +281,49 @@ function updateViz() {
     $('#datatable').dataTable().fnAddData(dt);
 
     // reset CFM purpose text
-    $('.purpose > span > label').text("(Select Country)");
+    // $('.purpose > span > label').text("(Select Country)");
 } //updateViz
+
+//filter 
+function purposeByItem(item, arr) {
+	var included = false;
+	for (var i=0; i<arr.length; i++) {
+	  if (item.includes(arr[i])) {
+	    included = true;
+	    break;
+	  }
+	}
+	return included;
+}
+
+function clickButton(){
+    var val = this.value;
+    var colName = (['Perception', 'Rumors', 'Questions', 'purpose-other'].includes(val)) ? 'Purpose' : 
+                (['COVID-19', 'Ebola', 'emergency-other'].includes(val)) ? 'Emergency' : "";
+    var filteredData = filteredCfmData.filter(function(d){
+        if (colName == 'Purpose') {
+            if (val != 'purpose-other') {
+                return d['Purpose'].includes(val);
+            } else {
+                return (d['Purpose'].includes('Suggestions') || d['Purpose'].includes('Complaints') || d['Purpose'].includes('Accountability'));
+            }
+        } else if (colName == 'Emergency') {
+            if (val == 'COVID-19' || val == 'Ebola') {
+                return d['Emergency'].includes(val);
+            } else {
+                // return (d['Emergency'].includes('Migrant') || d['Emergency'].includes('Protection') || d['Emergency'].includes('Refugees'));
+                return (d['Emergency'].includes(['Migrant']) || d['Emergency'].includes(['Refugees']) || d['Emergency'].includes(['Volcano']) || d['Emergency'].includes(['Dengue']) || d['Emergency'].includes(['Protection']) || d['Emergency'].includes(['Youth']));
+            }
+        }
+    });
+
+    // // update datatable
+    var dt = getDataTableData(filteredData);
+    $('#datatable').dataTable().fnClearTable();
+    $('#datatable').dataTable().fnAddData(dt);
+}// clickButton
+
+var buttons = document.getElementsByClassName("filter");
+for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", clickButton);        
+}

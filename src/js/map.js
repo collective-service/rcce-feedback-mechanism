@@ -111,7 +111,7 @@ function initiateMap() {
       hideMapTooltip(maptip); 
     })
     .on("click", function(d){
-      $('.purpose > span > label').text("( " +d.properties.NAME+" )");
+      // $('.purpose > span > label').text("( " +d.properties.NAME+" )");
       var data = filteredCfmData.filter(function(p) { return p['ISO3'] == d.properties.ISO_A3 ; });
       var dt = getDataTableData(data);
       $('#datatable').dataTable().fnClearTable();

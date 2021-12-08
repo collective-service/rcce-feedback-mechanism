@@ -55,10 +55,10 @@ $('#regionSelect').on('change', function(e){
   });
 
 $('#reset-table').on('click', function(){
-    if(countrySelectedFromMap){
+    // if(countrySelectedFromMap){
     var dt = getDataTableData();
     $('#datatable').dataTable().fnClearTable();
     $('#datatable').dataTable().fnAddData(dt)
-    }
+    // }
     
 });

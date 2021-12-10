@@ -1326,3 +1326,10 @@ a {
 
 .tag-purpose-other {
   background-color: #dbdee6; }
+
+.footer {
+  padding-top: 10px;
+  padding-bottom: 10px; }
+  .footer span {
+    font-size: 0.75rem;
+    line-height: 1.5; }

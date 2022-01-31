@@ -1,3 +1,8 @@
+function slugify(texte){
+    return texte.toLowerCase()
+             .replace(/[^\w ]+/g, '')
+             .replace(/ +/g, '-');
+}
 //return the unique values of given col name
 function getColumnUniqueValues(){
     var values = [];

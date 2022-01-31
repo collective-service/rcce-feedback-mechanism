@@ -1,3 +1,20 @@
+// get status formatted in tags
+function getFormattedStatus(item){
+    var items = [] ;
+    var arr = item.split(",");
+    var trimedArr = arr.map(x => x.trim());
+    for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
+        if (trimedArr[index]) {
+            items.push(trimedArr[index]);
+        }
+    }
+    var formatedDims = "";
+    items.forEach(element => {
+        var className = slugify(element);
+        formatedDims +='<label class="alert tag-'+className+'">'+element+'</label>';
+    });
+    return formatedDims;
+}//getFormattedStatus
 
 function getDataTableData(data = filteredCfmData){
     var dt = [];
@@ -5,9 +22,9 @@ function getDataTableData(data = filteredCfmData){
         dt.push(
             [
                 element['id'],
-                element['Country'],
-            // getFormattedDimension(element['dimension']), 
                 element['Organisation Name'],
+                element['Country'],
+                getFormattedStatus(element['Status']), 
                 element['Frequency'], 
                 element['Channels'],
                 element['Emergency'], 
@@ -34,6 +51,7 @@ function generateDataTable(){
                 "defaultContent": '<i class="fa fa-plus-circle"></i>',
                 "width": "1%"
             },
+            {"width": "10%"},
             {"width": "15%"},
             {"width": "10%"},
             {"width": "5%"},
@@ -50,14 +68,14 @@ function generateDataTable(){
                 "defaultContent": "-",
                 "targets": "_all"
             },
-            {"targets": [7], "visible": false},{"targets": [8], "visible": false},{"targets": [9], "visible": false},
-            {"targets": [10], "visible": false},{"targets": [11], "visible": false},{"targets": [12], "visible": false},
-            {"targets": [13], "visible": false},{"targets": [14], "visible": false},{"targets": [15], "visible": false},
-            {"targets": [16], "visible": false},{"targets": [16], "visible": false}
+            {"targets": [8], "visible": false},{"targets": [9], "visible": false},{"targets": [10], "visible": false},
+            {"targets": [11], "visible": false},{"targets": [12], "visible": false},{"targets": [13], "visible": false},
+            {"targets": [14], "visible": false},{"targets": [15], "visible": false},{"targets": [16], "visible": false},
+            {"targets": [18], "visible": false},{"targets": [17], "visible": false}
             // { "searchable" : true, "targets": "_all"},
             // {"type": "myDate","targets": 4}
         ],
-        "pageLength": 10,
+        "pageLength": 20,
         "bLengthChange": false,
         "pagingType": "simple_numbers",
         "order":[[1, 'asc']],
@@ -72,8 +90,8 @@ function generateDataTable(){
                         format:{
                             header: function(data, columnIdx){
                                 var hd = ['Name', 'Scale', '# Feedbacks (last 6 months)', 'Target', 'Details','Keyword','National Coordination','Inter-agency','Partners', 'Contact email', 'Status'];
-                                if(columnIdx >= 7){
-                                    return hd[columnIdx-7];
+                                if(columnIdx >= 8){
+                                    return hd[columnIdx-8];
                                 }else {
                                     return data;
                                 }
@@ -111,6 +129,7 @@ function generateDataTable(){
 
 $("#exportTable").on("click", function() {
     // datatable.button( '.buttons-excel' ).trigger();
+    console.log("downloading...")
     $(".buttons-excel").trigger("click");
 });
 
@@ -126,35 +145,35 @@ function format(arr){
                             '<tbody>'+
                                 '<tr>'+
                                     '<td><strong>Name</strong></td>'+
-                                    '<td>'+filtered[0]['Name']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['Name']+'</td>'+
                                     '<td><strong>Start date</strong></td>'+
-                                    '<td>'+filtered[0]['Start date']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['Start date']+'</td>'+
                                     '<td><strong># Feedback</strong></td>'+
-                                    '<td>'+filtered[0]['# Feedbacks (last 6 months)']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['# Feedbacks (last 6 months)']+'</td>'+
                                 '</tr>'+
                                 '<tr>'+
                                     '<td><strong>Scale</strong></td>'+
-                                    '<td>'+filtered[0]['Scale']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['Scale']+'</td>'+
                                     '<td><strong>National Coordination<strong></td>'+
-                                    '<td>'+filtered[0]['National Coordination']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['National Coordination']+'</td>'+
                                     '<td><strong>Partners<strong></td>'+
-                                    '<td>'+filtered[0]['Partners']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['Partners']+'</td>'+
                                 '</tr>'+
                                 '<tr>'+
                                     '<td><strong>Status<s/trong></td>'+
-                                    '<td>'+filtered[0]['Status']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['Status']+'</td>'+
                                     '<td><strong>Interagency</strong></td>'+
-                                    '<td>'+filtered[0]['Inter-agency']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['Inter-agency']+'</td>'+
                                     '<td><strong>Keywords</strong></td>'+
-                                    '<td>'+filtered[0]['Keyword']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['Keyword']+'</td>'+
                                 '</tr>'+
                                 '<tr>'+
                                     '<td><strong>Target</strong></td>'+
-                                    '<td>'+filtered[0]['Target']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['Target']+'</td>'+
                                     '<td><strong>Contact<strong></td>'+
-                                    '<td>'+filtered[0]['Contact Email']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['Contact Email']+'</td>'+
                                     '<td><strong>Details<strong></td>'+
-                                    '<td>'+filtered[0]['Details']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['Details']+'</td>'+
                             '</tr>'+
                             '</tbody>'+
                         '</table>'+
@@ -249,26 +268,10 @@ $('#regionSelect').on('change', function(e){
     var filter = filteredCfmData;
     
     select != "all" ? filter = filteredCfmData.filter(function(d){ return d['Region'] == select ; }) : null;
-    // filteredCfmData = getFilteredDataFromSelection();
 
-    // filteredCfmData.forEach(element => {
-    //     countriesISO3Arr.includes(element['ISO3']) ? '' : countriesISO3Arr.push(element['ISO3']);
-    // });
     $('#orgSelect').val('all');
     updateDataTable(filter);
     updatePane(filter, select);
-    // reset others filters
-
-    // updateViz();
-    // zoom to region 
-    // if (select == 'all') {
-    //     mapsvg.transition()
-    //     .duration(750)
-    //     .call(zoom.transform, d3.zoomIdentity);
-    // }
-    // zoomToRegion(select);
-    // reset layers selection to all
-    // $('#all').prop('checked', true);
 
   });
 

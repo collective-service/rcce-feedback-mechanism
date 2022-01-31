@@ -41,6 +41,7 @@ body {
     font-size: 26px;
     // font-family: "Montserrat", Helvetica, Arial, Lucida, sans-serif;
     line-height: 1em;
+    color: #204669;
   }
   #divider {
     width: 30px;
@@ -50,7 +51,8 @@ body {
   }
   img {
     height: 180px;
-    width: 220px;
+    width: 270px;
+
     padding-right: 10px;
     padding-bottom: 15px;
   }
@@ -192,6 +194,7 @@ body {
   margin-top: 30px;
 }
 
+//
 .key-figure {
   h5 {
     font-family: "Source Sans Pro", sans-serif;
@@ -223,20 +226,11 @@ select {
   width: 190px;
   margin: 0 5px 0 10px;
   padding: 0 10px 0 10px;
-
-  // #regionSelect {
-  //   width: 100%;
-  // }
-  // #orgSelect {
-  //   width: 80%;
-  // }
 }
 
 .purpose {
   display: inline;
   padding-top: 10px;
-  // padding-bottom: 10px;
-  // margin-bottom: 10px;
   h6 {
     span {
       font-weight: bold;
@@ -245,13 +239,7 @@ select {
 }
 
 .btn-tertiary {
-  // float: right;
-  // padding: 0 5px 0 5px;
   color: #d1021a;
-  // text-transform: uppercase;
-  // border: 0;
-  // font-size: 0.85rem;
-  // line-height: 1.5;
   outline: none;
   display: block;
   padding: 5px 8px 5px 8px;
@@ -354,27 +342,18 @@ a {
   border-radius: 0.5rem;
 }
 
-// focus
-.tag-covid-19 {
-  background-color: #d90368;
-}
-.tag-ebola {
-  background-color: #e27093;
-}
-.tag-emergency-other {
-  background-color: #9d9fa2;
-}
-.tag-perception {
+// Status
+.tag-active {
   background-color: #2f9c67;
 }
-.tag-rumors {
-  background-color: #546b89;
+.tag-under-development {
+  background-color: #9ec8ae;
 }
-.tag-questions {
+.tag-inactive {
   background-color: #798ba5;
 }
-.tag-purpose-other {
-  background-color: #dbdee6;
+.tag-closed {
+  background-color: #a6b0c3;
 }
 
 .footer {

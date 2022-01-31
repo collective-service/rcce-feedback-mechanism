@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <!-- CSS only -->
+    <link rel="icon" href="https://www.rcce-collective.net/wp-content/uploads/2021/04/android-chrome-192x192-1.png" sizes="192x192" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.css"/>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="" />
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/jquery.dataTables.min.css">
+    <!-- Multi select -->
+    <link href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/39e5643f1a.js"></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://d3-legend.susielu.com/d3-legend.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
+    <!-- MDB -->
+    <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
+    <link href='css/styles.css' rel='stylesheet' />
+    <title>RCCE CFM</title>
+</head>
+<body>
+    <div class="loader">
+        <div class="sp sp-circle"></div>
+        Loading data...
+    </div>
+    <div class="container" id="main">
+        <h2>Community Feedback Mechanism Tracker</h2>
+        <p  id="description">
+            The CFM Tracker monitors community feedback mechanisms led by the Collective Service's Partners to support RCCE response on public health emergencies and more specifically on COVID-19. 
+            Last update 30/11/201.
+            <a href="https://forms.gle/mDbSbaua1yfNkJc19" target="_blank">
+                <i class="far fa-envelope"></i> Submit a community feedback mechanism.
+            </a>
+        </p>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="col-sm-4 key-figure">
+                        <div class="num" id="totalCfms"></div>
+                        <h5># feedback mechanisms</h5>
+                    </div>
+                    <div class="col-sm-4 key-figure">
+                        <div class="num" id="countriesCFM"></div>
+                        <h5># countries</h5>
+                    </div>
+                    <div class="col-sm-4 key-figure">
+                        <div class="num" id="orgsCFM"></div>
+                        <h5># organizations</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <select name="orgSelect" id="orgSelect"></select>
+                    </div>
+                    <div class="col-sm-6">
+                        <select name="regionSelect" id="regionSelect"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 map">
+                <div id="map">
+                    <div class="zoom-controls">
+                        <button id="zoom_in">+</button>
+                        <button id="zoom_out">-</button>
+                    </div>
+                    <div class="focus-layer">
+                        <h5>LEGEND</h5>
+                        <div>
+                            <label id="actif"><i class="fa fa-circle fa-sm"></i> Active </label>
+                        </div>
+                        <div>
+                            <label id="pipeline"><i class="fa fa-circle fa-sm"></i> Pipeline </label>
+                        </div>
+                        <div>
+                            <label id="inactive"><i class="fa fa-circle fa-sm"></i> Inactive </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- table -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="purpose">
+                    <!-- <span>Community Feedback Mechanism Purpose <label>(Select Country)</label></span> -->
+                    <span class="focusFilter">
+                        <label><strong>Filter by functions: </strong></label>
+                        <label><button type="button" class="btn btn-secondary filter" id="perception" value="Perception">Perception</button></label>
+                        <label><button type="button" class="btn btn-secondary filter" id="rumors" value="Rumors">Rumors</button></label>
+                        <label><button type="button" class="btn btn-secondary filter" id="questions" value="Questions">Questions</button></label>
+                        <label><button type="button" class="btn btn-secondary filter" id="others" value="purpose-other">Other</button></label>
+                    </span>
+                    <span class="emergencyFilter">
+                        <label><strong>Filter by emergency: </strong></label>
+                        <label><button type="button" class="btn btn-secondary filter" id="covid" value="COVID-19">COVID-19</button></label>
+                        <label><button type="button" class="btn btn-secondary filter" id="ebola" value="Ebola">Ebola</button></label>
+                        <label><button type="button" class="btn btn-secondary filter" id="otherOutbreak" value="emergency-other">Other</button></label>
+                    </span>
+                    <button type="button" class="btn btn-tertiary" id="reset-table">Reset filters</button>
+                </div>
+                <table id="datatable" class="row-border" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Country</th>
+                        <th>Organization</th>
+                        <th>Functions</th>
+                        <th>Focus</th>
+                        <th>Link</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <!-- <hr> -->
+        <div class="row">
+            <div class="col-md-12 footer">
+                 <span>
+                    The boundaries and names shown and the designations used on this map do not imply official endorsement or acceptance by the International Federation of the Red Cross and Red Crescent Societies.
+                </span>
+            </div>
+        </div>
+    </div>
+    <script type='text/javascript' src='js/bundle.js'></script>
+</body>
+</html>

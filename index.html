@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <!-- CSS only -->
+    <link rel="icon" href="https://www.rcce-collective.net/wp-content/uploads/2021/04/android-chrome-192x192-1.png" sizes="192x192" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.css"/>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/jquery.dataTables.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/39e5643f1a.js"></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://d3-legend.susielu.com/d3-legend.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+    <link href='css/styles.css' rel='stylesheet' />
+    <title>RCCE Community Feedback Mechanism Tracker</title>
+</head>
+<body>
+    <div class="loader">
+        <div class="sp sp-circle"></div>
+        Loading data...
+    </div>
+    <div class="fluid-container" id="main">
+        <section id="sectionOne">
+            <div class="sur-couche">
+                <div class="details">
+                    <h5>COMMUNITY FEEDBACK MECHANISM</h5>
+                    <div id="divider"><hr></div>
+                    <div class="media">
+                        <img src="assets/fonts/ifrc1.png" alt="" class="rounded float-left">
+                        <p>
+                            The CFM Tracker monitors community feedback mechanisms led by the Collective Service's Partners to support RCCE response on public health emergencies and more specifically on COVID-19.
+                            <a href="https://forms.gle/mDbSbaua1yfNkJc19" target="_blank">
+                                <input type="button" class="btn btn-info" value="Submit CFM">
+                            </a> 
+                            <!-- <button type="button" class="btn btn-info" action="https://forms.gle/mDbSbaua1yfNkJc19">Submit CFM</button> -->
+                        </p>
+                    </div>
+                    <h6>GLOBAL OVERVIEw</h6>
+                    <div id="globalStats"></div>
+                    <div id="overview"></div>
+                </div>
+            </div>
+            <div id="map">
+                <div class="zoom-controls">
+                    <button id="zoom_in">+</button>
+                    <button id="zoom_out">-</button>
+                </div>
+            </div>
+        </section>
+        <section >
+            <div class="filters flex-centrer">
+                <!-- <span class="dtSearch">
+                    <label id="searchBox"><input class="form-control" id="searchInput" type="text" placeholder="Search.."></label>
+                </span> -->
+                <span class="statusFilter">
+                    <label><strong>Filter by status: </strong></label>
+                        <!-- <label><button type="button" class="btn tag-all   filter" id="all" value="all">All</button></label> -->
+                        <label><button type="button" class="btn tag-main  filter" id="active" value="Active">Active</button></label>
+                        <label><button type="button" class="btn tag-main  filter" id="under-development" value="Under Development">Under Development</button></label>
+                        <label><button type="button" class="btn tag-main  filter" id="inactive" value="Inactive">Inactive</button></label>
+                        <label><button type="button" class="btn tag-main  filter" id="closed" value="Closed">Closed</button></label>
+                </span>
+                <span class="emergencyFilter">
+                    <label><strong>Filter by emergency: </strong></label>
+                    <label><button type="button" class="btn btn-secondary filter" id="covid" value="COVID-19">COVID-19</button></label>
+                    <label><button type="button" class="btn btn-secondary filter" id="ebola" value="Ebola">Ebola</button></label>
+                    <label><button type="button" class="btn btn-secondary filter" id="otherOutbreak" value="emergency-other">Other</button></label>
+                </span>
+                <span class="dropdownSelect">
+                    <select name="regionSelect" id="regionSelect"></select>
+                </span>
+                <span class="dropdownSelect">
+                    <select name="orgSelect" id="orgSelect"></select>
+                </span>
+
+                <button type="button" class="btn btn-tertiary" id="reset-table">Reset filters</button>
+                <span>
+                    <button class="btn btn-tertiary exportData" id="exportTable">
+                        <i class="fa fa-download"> </i> download data
+                    </button>
+                </span>
+                
+            </div>
+        </section>
+        <section>
+            <table id="datatable" class="row-border" style="width:100%">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Country</th>
+                    <th>Organisation</th>
+                    <th>Frequence</th>
+                    <th>Channels</th>
+                    <th>Emergency</th>
+                    <th>Link</th>
+                    <th></th><th></th>
+                </tr>
+                </thead>
+            </table>
+        </section>
+    </div>
+    <script type='text/javascript' src='js/bundle.js'></script>
+</body>
+</html>
+        

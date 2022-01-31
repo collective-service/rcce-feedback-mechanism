@@ -1,22 +1,28 @@
+// map js
+let isMobile = $(window).width()<767 ? true : false;
+let countriesArr = [];
 let g, mapsvg, projection, width, height, zoom, path;
+let viewportWidth = window.innerWidth;
 let currentZoom = 1;
-
+let mapClicked = false;
+let selectedCountryFromMap = "all";
 let countrySelectedFromMap = false;
-let mapFillColor = '#9EC8AE', 
-    mapInactive = '#fff',//'#f1f1ee',//'#C2C4C6',
+let mapFillColor = '#204669',//'#C2DACA',//'#2F9C67', 
+    mapInactive = '#fff',//'#DBDEE6',//'#f1f1ee',//'#C2C4C6',
     mapActive = '#2F9C67',
-    hoverColor = '#78B794';
+    hoverColor = '#2F9C67';//'#78B794';
 
 function initiateMap() {
-    width = $('#map').width();
+    width = viewportWidth;
+    // height = (isMobile) ? 400 : 500;
     height = 500;
-    var mapScale = width/7.8;
-    var mapCenter = [25, 25];
+    var mapScale = (isMobile) ? width/3.5 : width/10.6;
+    var mapCenter = (isMobile) ? [12, 12] : [25, 25];
 
     projection = d3.geoMercator()
         .center(mapCenter)
         .scale(mapScale)
-        .translate([width / 2, height / 1.9]);
+        .translate([width / 2.9, height / 1.6]);
 
     path = d3.geoPath().projection(projection);
 
@@ -34,7 +40,10 @@ function initiateMap() {
     
     mapsvg.append("rect")
         .attr("width", "100%")
-        .attr("height", "100%");
+        .attr("height", "100%")
+        // .attr("fill", "#99daea");
+        .attr("fill", "#ccd4d8");
+
     //map tooltips
     var maptip = d3.select('#map').append('div').attr('class', 'd3-tip map-tip hidden');
 
@@ -45,34 +54,23 @@ function initiateMap() {
             .append("path")
             .attr('d',path)
             .attr('id', function(d){ 
-                return d.properties.ISO_A3; 
+                return d.properties.countryIso3Code; 
             })
             .attr('class', function(d){
-              var className = (countriesISO3Arr.includes(d.properties.ISO_A3)) ? 'hasCFM' : 'inactive';
+              var className = (countriesISO3Arr.includes(d.properties.ISO_A3)) ? 'hasStudy' : 'inactive';
               return className;
-          });
-    // cercles 
-    // var centroids = mapsvg.append("g")
-    //       .attr("class", "centroids")
-    //       .selectAll("centroid")
-    //       .data(locations)
-    //       .enter()
-    //         .append("g")
-    //         // .append("centroid")
-    //         .append("circle")
-    //         .attr('id', function(d){ 
-    //           return d["ISO_A3"]; 
-    //         })
-    //         .attr('class', function(d){
-    //           var className = (countriesISO3Arr.includes(d["ISO_A3"])) ? 'hasCFM' : 'inactive';
-    //           return className;
-    //       })
-    //       .attr("transform", function(d){ return "translate(" + projection([d.X, d.Y]) + ")"; });
+            })
+            .attr('fill', function(d){
+              return countriesISO3Arr.includes(d.properties.ISO_A3) ? mapFillColor : mapInactive ;
+            })
+            .attr('stroke-width', .2)
+            .attr('stroke', '#ccc');
+
     mapsvg.transition()
     .duration(750)
     .call(zoom.transform, d3.zoomIdentity);
 
-    choroplethMap();
+    // choroplethMap();
 
     //zoom controls
     d3.select("#zoom_in").on("click", function() {
@@ -81,45 +79,54 @@ function initiateMap() {
     d3.select("#zoom_out").on("click", function() {
         zoom.scaleBy(mapsvg.transition().duration(500), 0.5);
     });
-            
     
-    // var tipPays = d3.select('#countries').selectAll('path') 
-    g.filter('.hasCFM')
+    var tipPays = d3.select('#countries').selectAll('path') 
+    g.filter('.hasStudy')
     .on("mousemove", function(d){ 
-      var countryCfmData = filteredCfmData.filter(c => c['ISO3'] == d.properties.ISO_A3);
-      if (countryCfmData.length != 0) {
-        var content = '<h5>' + d.properties.NAME_LONG + '</h5>';
-        var numActive = 0, 
-            numInactive = 0, 
-            numPipeline = 0;
-        countryCfmData.forEach(element => {
-          element['Status'] == 'Active' ? numActive++ :
-          element['Status'] == 'Inactive' ? numInactive++ :
-          element['Status'] == 'Pipeline' ? numPipeline++ : null;
-        });
-        content += '<div>' +
-              '<div><label><i class="fa fa-circle fa-sm" style="color:#2F9C67;"></i> Active: '+numActive+'</label></div>' +
-              '<div><label><i class="fa fa-circle fa-sm" style="color:#9EC8AE;"></i> Pipeline: '+numPipeline+'</label></div>' +
-              '<div><label><i class="fa fa-circle fa-sm" style="color:#E9F1EA;"></i> Inactive: '+numInactive+'</label></div>' +
-              '</div>';
-
-        showMapTooltip(d, maptip, content);
-      }
-    //   showMapTooltip(d, maptip, "Qu'est ce qui se passe?");
+        if ( !$(this).hasClass('clicked')) {
+            $(this).attr('fill', hoverColor);
+        }
+        if (!mapClicked) {
+            // generateCountrytDetailPane(d.properties.ISO_A3, d.properties.NAME);
+        }
+        var mouse = d3.mouse(mapsvg.node()).map( function(d) { return parseInt(d); } );
+        maptip
+            .classed('hidden', false)
+            .attr('style', 'left:'+(mouse[0])+'px; top:'+(mouse[1]+25)+'px')
+            .html(d.properties.NAME);
+        
     })
     .on("mouseout", function(d) { 
-      hideMapTooltip(maptip); 
+        if ( !$(this).hasClass('clicked')) {
+            $(this).attr('fill', mapFillColor);
+        }
+        if (!mapClicked) {
+            // generateDefaultDetailPane();
+        }
+        maptip.classed('hidden', true);
     })
     .on("click", function(d){
-      // $('.purpose > span > label').text("( " +d.properties.NAME+" )");
-      var data = filteredCfmData.filter(function(p) { return p['ISO3'] == d.properties.ISO_A3 ; });
-      var dt = getDataTableData(data);
-      $('#datatable').dataTable().fnClearTable();
-      $('#datatable').dataTable().fnAddData(dt);
-      countrySelectedFromMap = true;
+        mapClicked = true;
+        selectedCountryFromMap = d.properties.NAME ;
+        mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
+
+        $(this).attr('fill', hoverColor);
+        $(this).addClass('clicked');
+        var countryData = filteredCfmData.filter(function(val){
+            return d.properties.ISO_A3 == val['ISO3'] ;
+        });
+        updateDataTable(countryData);
+        // desactivate org and reg filters
+        
+        // generateOverviewclicked(d.properties.ISO_A3, d.properties.NAME);
+        // $('.btn').removeClass('active');
+        // $('#all').toggleClass('active');
+        // $('#regionSelect').val('all');
+        
     })
 
 } //initiateMap
+
 
 function showMapTooltip(d, maptip, text){
 var mouse = d3.mouse(mapsvg.node()).map( function(d) { return parseInt(d); } );

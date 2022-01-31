@@ -1100,14 +1100,15 @@ body {
     font-weight: bold;
     font-style: normal;
     font-size: 26px;
-    line-height: 1em; }
+    line-height: 1em;
+    color: #204669; }
   .details #divider {
     width: 30px; }
     .details #divider hr {
       border-top: 4px solid #2f9c67; }
   .details img {
     height: 180px;
-    width: 220px;
+    width: 270px;
     padding-right: 10px;
     padding-bottom: 15px; }
   .details h6 {
@@ -1341,26 +1342,17 @@ a {
   border: 0;
   border-radius: 0.5rem; }
 
-.tag-covid-19 {
-  background-color: #d90368; }
-
-.tag-ebola {
-  background-color: #e27093; }
-
-.tag-emergency-other {
-  background-color: #9d9fa2; }
-
-.tag-perception {
+.tag-active {
   background-color: #2f9c67; }
 
-.tag-rumors {
-  background-color: #546b89; }
+.tag-under-development {
+  background-color: #9ec8ae; }
 
-.tag-questions {
+.tag-inactive {
   background-color: #798ba5; }
 
-.tag-purpose-other {
-  background-color: #dbdee6; }
+.tag-closed {
+  background-color: #a6b0c3; }
 
 .footer {
   padding-top: 10px;

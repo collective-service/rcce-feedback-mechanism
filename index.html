@@ -45,10 +45,10 @@
                         <img src="assets/fonts/ifrc1.png" alt="" class="rounded float-left">
                         <p>
                             The CFM Tracker monitors community feedback mechanisms led by the Collective Service's Partners to support RCCE response on public health emergencies and more specifically on COVID-19.
+                            <br>
                             <a href="https://forms.gle/mDbSbaua1yfNkJc19" target="_blank">
                                 <input type="button" class="btn btn-info" value="Submit CFM">
                             </a> 
-                            <!-- <button type="button" class="btn btn-info" action="https://forms.gle/mDbSbaua1yfNkJc19">Submit CFM</button> -->
                         </p>
                     </div>
                     <h6>GLOBAL OVERVIEw</h6>
@@ -88,14 +88,14 @@
                 <span class="dropdownSelect">
                     <select name="orgSelect" id="orgSelect"></select>
                 </span>
-
-                <button type="button" class="btn btn-tertiary" id="reset-table">Reset filters</button>
-                <span>
-                    <button class="btn btn-tertiary exportData" id="exportTable">
-                        <i class="fa fa-download"> </i> download data
+                <!-- <span id="btns"> -->
+                    <button type="button" class="btn btn-tertiary" id="reset-table">
+                        <span class="fa fa-refresh" data-toggle="tooltip" data-placement="top" title="Reset filters"></span>
+                      </button>
+                    <button type="button" class="btn btn-tertiary exportData" id="exportTable">
+                        <span class="fa fa-download" data-toggle="tooltip" data-placement="top" title="Download data"></span>
                     </button>
-                </span>
-                
+                <!-- </span> -->
             </div>
         </section>
         <section>
@@ -103,8 +103,9 @@
                 <thead>
                 <tr>
                     <th></th>
-                    <th>Country</th>
                     <th>Organisation</th>
+                    <th>Country</th>
+                    <th>Status</th>
                     <th>Frequence</th>
                     <th>Channels</th>
                     <th>Emergency</th>

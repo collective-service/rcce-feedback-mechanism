@@ -3,6 +3,7 @@ let numberCountriesCFM = 0;
 let regionsArr = ['All regions'],
     organisationsArr = ['All organizations'];
 let countriesISO3Arr = [];
+let emergenciesArr = ['COVID-19', 'Ebola', 'Dengue'];
 
 function choroplethMap(){
     mapsvg.selectAll('path').each( function(element, index) {
@@ -89,7 +90,30 @@ function generateRegionDropdown(){
 
 } //generateRegionDropdown
 
-function generateOrgDropdown(){
+// generate or update the organisation dropdown select
+function generateOrgDropdown(data){
+    var orgArr = ['All organizations'];
+    if(data != undefined) {  
+        data.forEach(element => {
+            orgArr.includes(element['Organisation Name']) ? '' : orgArr.push(element['Organisation Name']);
+        });
+    } else {
+        orgArr = organisationsArr;
+    }
+    $('#orgSelect').html('');
+    var options = "";
+    for (let index = 0; index < orgArr.length; index++) {
+        const element = orgArr[index];
+        index == 0 ? options += '<option value="all" selected>' + element + '</option>'  : 
+            options += '<option value="' + element + '">' + element + '</option>';
+    }
+    $('#orgSelect').append(options);
+    // $('#all').toggleClass('active');
+
+} //generateRegionDropdown
+
+
+function generateEmergencyTag(){
     var options = "";
     for (let index = 0; index < organisationsArr.length; index++) {
         const element = organisationsArr[index];
@@ -780,7 +804,7 @@ function getDataTableData(data = filteredCfmData){
                 element['Frequency'], 
                 element['Channels'],
                 element['Emergency'], 
-                '<a href="'+element['Link']+'" target="blank"><i class="fa fa-external-link"></i></a>',
+                element['Link'] != '' ? '<a href="'+element['Link']+'" target="blank"><i class="fa fa-external-link"></i></a>' : null,
                 //hidden
                 element['Name'], element['Scale'], element['# Feedbacks (last 6 months)'], element['Target'],
                 element['Details'], element['Keyword'], element['National Coordination'], element['Inter-agency'],
@@ -976,24 +1000,31 @@ for (var i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener('click', clickButton);   
 }
 
+
+function findOneEmergency(emergenciesArrTest, arr) {
+    return arr.some(function (v) {
+        return emergenciesArrTest.indexOf(v) >= 0;
+    });
+};
+
 // reset all filters and filter only clicked
 function clickButton(){
     $('.btn').removeClass('active');
     var filter;
     var colSelected = this.value;
-    if (['Active', 'Under Development', 'Inactive', 'Closed'].includes(colSelected)) {
+    if (['Active', 'Development', 'Inactive', 'Closed'].includes(colSelected)) {
         // status
         filter = cfmData.filter(function(d){ return d['Status'] == colSelected ;}) ;
     } else{
         // Emergency
-        if(['COVID-19', 'Ebola'].includes(colSelected)){
+        if(emergenciesArr.includes(colSelected)){
             filter = cfmData.filter(function(d){ 
                 var arr = getFormattedColumn(d['Emergency']);
                 return arr.includes(colSelected) ;}) ;
         }else {
             filter = cfmData.filter(function(d){ 
                 var arr = getFormattedColumn(d['Emergency']);
-                return (!arr.includes('COVID-19')) && (!arr.includes('Ebola')) ;}) ;
+                return !findOneEmergency(emergenciesArr, arr); }) ;
         }
     }    
     
@@ -1021,7 +1052,9 @@ $('#regionSelect').on('change', function(e){
     
     select != "all" ? filter = filteredCfmData.filter(function(d){ return d['Region'] == select ; }) : null;
 
-    $('#orgSelect').val('all');
+    // $('#orgSelect').val('all');
+    generateOrgDropdown(filter);
+
     updateDataTable(filter);
     updatePane(filter, select);
 
@@ -1029,7 +1062,7 @@ $('#regionSelect').on('change', function(e){
 
 $('#reset-table').on('click', function(){
     $('#regionSelect').val('all');
-    $('#orgSelect').val('all');
+    generateOrgDropdown();
     generateDefaultDetailPane();
     // reset map selection
     mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
@@ -1067,7 +1100,22 @@ $( document ).ready(function(){
             countriesISO3Arr = colUniqueValues[1],
             regionsArr.push(...colUniqueValues[2]),
             organisationsArr.push(...colUniqueValues[3]);
-            
+            // var arrEmerg = colUniqueValues[4];
+            // arrEmerg.forEach(item => {
+            //     var arr = item.split(",");
+            //     var trimedArr = arr.map(x => x.trim());
+            //     var items = [];
+            //     for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
+            //         if (trimedArr[index]) {
+            //             items.push(trimedArr[index])
+            //         }
+            //     }
+            //     items.forEach(element => {
+            //         emergenciesArr.includes(element) ? '' : emergenciesArr.push(element);
+            //     });
+            // });
+            // console.log(emergenciesArr)
+
             generateDefaultDetailPane();
             generateRegionDropdown();
             generateOrgDropdown();

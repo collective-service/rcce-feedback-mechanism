@@ -26,7 +26,22 @@ $( document ).ready(function(){
             countriesISO3Arr = colUniqueValues[1],
             regionsArr.push(...colUniqueValues[2]),
             organisationsArr.push(...colUniqueValues[3]);
-            
+            // var arrEmerg = colUniqueValues[4];
+            // arrEmerg.forEach(item => {
+            //     var arr = item.split(",");
+            //     var trimedArr = arr.map(x => x.trim());
+            //     var items = [];
+            //     for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
+            //         if (trimedArr[index]) {
+            //             items.push(trimedArr[index])
+            //         }
+            //     }
+            //     items.forEach(element => {
+            //         emergenciesArr.includes(element) ? '' : emergenciesArr.push(element);
+            //     });
+            // });
+            // console.log(emergenciesArr)
+
             generateDefaultDetailPane();
             generateRegionDropdown();
             generateOrgDropdown();

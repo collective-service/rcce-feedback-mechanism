@@ -2,6 +2,7 @@ let numberCountriesCFM = 0;
 let regionsArr = ['All regions'],
     organisationsArr = ['All organizations'];
 let countriesISO3Arr = [];
+let emergenciesArr = ['COVID-19', 'Ebola', 'Dengue'];
 
 function choroplethMap(){
     mapsvg.selectAll('path').each( function(element, index) {

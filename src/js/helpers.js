@@ -34,7 +34,30 @@ function generateRegionDropdown(){
 
 } //generateRegionDropdown
 
-function generateOrgDropdown(){
+// generate or update the organisation dropdown select
+function generateOrgDropdown(data){
+    var orgArr = ['All organizations'];
+    if(data != undefined) {  
+        data.forEach(element => {
+            orgArr.includes(element['Organisation Name']) ? '' : orgArr.push(element['Organisation Name']);
+        });
+    } else {
+        orgArr = organisationsArr;
+    }
+    $('#orgSelect').html('');
+    var options = "";
+    for (let index = 0; index < orgArr.length; index++) {
+        const element = orgArr[index];
+        index == 0 ? options += '<option value="all" selected>' + element + '</option>'  : 
+            options += '<option value="' + element + '">' + element + '</option>';
+    }
+    $('#orgSelect').append(options);
+    // $('#all').toggleClass('active');
+
+} //generateRegionDropdown
+
+
+function generateEmergencyTag(){
     var options = "";
     for (let index = 0; index < organisationsArr.length; index++) {
         const element = organisationsArr[index];

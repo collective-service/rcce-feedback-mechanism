@@ -28,7 +28,7 @@ function getDataTableData(data = filteredCfmData){
                 element['Frequency'], 
                 element['Channels'],
                 element['Emergency'], 
-                '<a href="'+element['Link']+'" target="blank"><i class="fa fa-external-link"></i></a>',
+                element['Link'] != '' ? '<a href="'+element['Link']+'" target="blank"><i class="fa fa-external-link"></i></a>' : null,
                 //hidden
                 element['Name'], element['Scale'], element['# Feedbacks (last 6 months)'], element['Target'],
                 element['Details'], element['Keyword'], element['National Coordination'], element['Inter-agency'],
@@ -224,24 +224,31 @@ for (var i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener('click', clickButton);   
 }
 
+
+function findOneEmergency(emergenciesArrTest, arr) {
+    return arr.some(function (v) {
+        return emergenciesArrTest.indexOf(v) >= 0;
+    });
+};
+
 // reset all filters and filter only clicked
 function clickButton(){
     $('.btn').removeClass('active');
     var filter;
     var colSelected = this.value;
-    if (['Active', 'Under Development', 'Inactive', 'Closed'].includes(colSelected)) {
+    if (['Active', 'Development', 'Inactive', 'Closed'].includes(colSelected)) {
         // status
         filter = cfmData.filter(function(d){ return d['Status'] == colSelected ;}) ;
     } else{
         // Emergency
-        if(['COVID-19', 'Ebola'].includes(colSelected)){
+        if(emergenciesArr.includes(colSelected)){
             filter = cfmData.filter(function(d){ 
                 var arr = getFormattedColumn(d['Emergency']);
                 return arr.includes(colSelected) ;}) ;
         }else {
             filter = cfmData.filter(function(d){ 
                 var arr = getFormattedColumn(d['Emergency']);
-                return (!arr.includes('COVID-19')) && (!arr.includes('Ebola')) ;}) ;
+                return !findOneEmergency(emergenciesArr, arr); }) ;
         }
     }    
     
@@ -269,7 +276,9 @@ $('#regionSelect').on('change', function(e){
     
     select != "all" ? filter = filteredCfmData.filter(function(d){ return d['Region'] == select ; }) : null;
 
-    $('#orgSelect').val('all');
+    // $('#orgSelect').val('all');
+    generateOrgDropdown(filter);
+
     updateDataTable(filter);
     updatePane(filter, select);
 
@@ -277,7 +286,7 @@ $('#regionSelect').on('change', function(e){
 
 $('#reset-table').on('click', function(){
     $('#regionSelect').val('all');
-    $('#orgSelect').val('all');
+    generateOrgDropdown();
     generateDefaultDetailPane();
     // reset map selection
     mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);

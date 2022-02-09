@@ -39,14 +39,14 @@ function generateDefaultDetailPane(){
     $('#globalStats').removeClass('hidden');
 } // generateDefaultDetailPane
 
-function updatePane(data, title){
+function updatePane(data){
     var arrCountries = [],
         arrOrgs = [];
     data.forEach(element => {
         arrCountries.includes(element['Country']) ? '' : arrCountries.push(element['Country']);
         arrOrgs.includes(element['Organisation Name']) ? '' : arrOrgs.push(element['Organisation Name']);
     });
-    title == "emergency-other" ? title = "Other emergency" : null;
+    var title = "Selection(s)";
     $('.details > h6').text(title);
     $('#totalCfms').text(data.length);
     $('#countriesCFM').text(arrCountries.length);

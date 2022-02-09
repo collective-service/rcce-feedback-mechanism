@@ -44,7 +44,8 @@
                     <div class="media">
                         <img src="assets/fonts/ifrc1.png" alt="" class="rounded float-left">
                         <p>
-                            The CFM Tracker monitors community feedback mechanisms led by the Collective Service's Partners to support RCCE response on public health emergencies and more specifically on COVID-19.
+                            The Community Feedback Mechanism (CFM) Tracker monitors community feedback mechanisms led by the Collective Service's Partners to support RCCE 
+                            response on public health emergencies and more specifically on COVID-19. Clicking on the plus button on the table below displays more information.
                             <br>
                             <a href="https://forms.gle/mDbSbaua1yfNkJc19" target="_blank">
                                 <input type="button" class="btn btn-info" value="Submit CFM">
@@ -78,11 +79,11 @@
                 </span>
                 <span class="emergencyFilter">
                     <label><strong>Filter by emergency: </strong></label>
-                    <label><button type="button" class="btn btn-secondary filter" id="covid" value="COVID-19">COVID-19</button></label>
+                    <label><button type="button" class="btn btn-secondary emergency" id="covid" value="COVID-19">COVID-19</button></label>
                     <!-- <label><button type="button" class="btn btn-secondary filter" id="cholera" value="Cholera">Cholera</button></label> -->
-                    <label><button type="button" class="btn btn-secondary filter" id="ebola" value="Ebola">Ebola</button></label>
-                    <label><button type="button" class="btn btn-secondary filter" id="dengue" value="Dengue">Dengue</button></label>
-                    <label><button type="button" class="btn btn-secondary filter" id="otherOutbreak" value="emergency-other">Other</button></label>
+                    <label><button type="button" class="btn btn-secondary emergency" id="ebola" value="Ebola">Ebola</button></label>
+                    <label><button type="button" class="btn btn-secondary emergency" id="dengue" value="Dengue">Dengue</button></label>
+                    <label><button type="button" class="btn btn-secondary emergency" id="otherOutbreak" value="emergency-other">Other</button></label>
                 </span>
                 <span class="dropdownSelect">
                     <select name="regionSelect" id="regionSelect"></select>
@@ -91,9 +92,10 @@
                     <select name="orgSelect" id="orgSelect"></select>
                 </span>
                 <!-- <span id="btns"> -->
-                    <button type="button" class="btn btn-tertiary" id="reset-table">
+                    <!-- <button type="button" class="btn btn-tertiary" id="reset-table">
                         <span class="fa fa-refresh" data-toggle="tooltip" data-placement="top" title="Reset filters"></span>
-                      </button>
+                    </button> -->
+                    <button type="button" class="btn btn-tertiary" id="reset-table">Clear all selections</button>
                     <button type="button" class="btn btn-tertiary exportData" id="exportTable">
                         <span class="fa fa-download" data-toggle="tooltip" data-placement="top" title="Download data"></span>
                     </button>

@@ -40,14 +40,14 @@ function generateDefaultDetailPane(){
     $('#globalStats').removeClass('hidden');
 } // generateDefaultDetailPane
 
-function updatePane(data, title){
+function updatePane(data){
     var arrCountries = [],
         arrOrgs = [];
     data.forEach(element => {
         arrCountries.includes(element['Country']) ? '' : arrCountries.push(element['Country']);
         arrOrgs.includes(element['Organisation Name']) ? '' : arrOrgs.push(element['Organisation Name']);
     });
-    title == "emergency-other" ? title = "Other emergency" : null;
+    var title = "Selection(s)";
     $('.details > h6').text(title);
     $('#totalCfms').text(data.length);
     $('#countriesCFM').text(arrCountries.length);
@@ -947,7 +947,7 @@ function format(arr){
                                     '<td><strong>Target</strong></td>'+
                                     '<td colspan="2">'+filtered[0]['Target']+'</td>'+
                                     '<td><strong>Contact<strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Contact Email']+'</td>'+
+                                    '<td colspan="2">'+filtered[0]['Contact email']+'</td>'+
                                     '<td><strong>Details<strong></td>'+
                                     '<td colspan="2">'+filtered[0]['Details']+'</td>'+
                             '</tr>'+
@@ -966,21 +966,57 @@ function updateDataTable(data = cfmData){
 
 } //updateDataTable
 
-function getFilteredDataFromDropdown(){
+function getFilteredDataFromDropdown(inputData){
     var org = $('#orgSelect').val();
     var region = $('#regionSelect').val();
-    var data;
+    var data = (inputData == undefined) ? filteredCfmData : inputData;
     if(org != "all" && region != "all") {
         data = filteredCfmData.filter(function(d){
             return (d['Region'] == region) && (d['Organisation Name'] == org);
         })
     }
     else {
-        org == "all" ? data = filteredCfmData.filter(function(d){ return d['Region'] == region ;}) :
-        region == "all" ? data = filteredCfmData.filter(function(d){ return d['Organisation Name'] == org ;}) : '';
+        org == "all" ? data = data.filter(function(d){ return d['Region'] == region ;}) :
+        region == "all" ? data = data.filter(function(d){ return d['Organisation Name'] == org ;}) : '';
     }
     return data;
 }//getFilteredDataFromDropdown
+
+// get result data from status and emergency filters
+function getFilteredDataFromTags(inputData){
+    var statusTag = "all", 
+        emergencyFilter = "all";
+    var data = (inputData == undefined) ? filteredCfmData : inputData;
+    for (var i = 0; i < buttonsTags.length; i++) {
+        if ($(buttonsTags[i]).hasClass('active')) {
+            statusTag = $(buttonsTags[i]).val();
+        }
+    }
+    for (var i = 0; i < buttonsEmergency.length; i++) {
+        if ($(buttonsEmergency[i]).hasClass('active')) {
+            emergencyFilter = $(buttonsEmergency[i]).val();
+        }
+    }
+
+    if(statusTag !="all"){
+        data = data.filter(function(d){ return d['Status'] == statusTag; });
+    }
+    if(emergencyFilter != "all"){
+        var dt;
+        // Emergency
+        if(emergenciesArr.includes(emergencyFilter)){
+            dt = data.filter(function(d){ 
+                var arr = getFormattedColumn(d['Emergency']);
+                return arr.includes(emergencyFilter) ;}) ;
+        }else {
+            dt = data.filter(function(d){ 
+                var arr = getFormattedColumn(d['Emergency']);
+                return !findOneEmergency(emergenciesArr, arr); }) ;
+        }
+        data = dt;
+    }
+    return data;
+}//getFilteredDataFromTags
 
 // returns a formatted array with purposes/emergencies 
 function getFormattedColumn(item){
@@ -995,11 +1031,15 @@ function getFormattedColumn(item){
     return items;
 } // getFormattedColumn
 
-var buttons = document.getElementsByClassName("filter");
-for (var i = 0; i < buttons.length; i++) {
-    buttons[i].addEventListener('click', clickButton);   
+var buttonsTags = document.getElementsByClassName("filter");
+for (var i = 0; i < buttonsTags.length; i++) {
+    buttonsTags[i].addEventListener('click', statusFilterClick);   
 }
 
+var buttonsEmergency = document.getElementsByClassName("emergency");
+for (var i = 0; i < buttonsEmergency.length; i++) {
+    buttonsEmergency[i].addEventListener('click', emergencyFilterclick);   
+}
 
 function findOneEmergency(emergenciesArrTest, arr) {
     return arr.some(function (v) {
@@ -1007,60 +1047,105 @@ function findOneEmergency(emergenciesArrTest, arr) {
     });
 };
 
-// reset all filters and filter only clicked
-function clickButton(){
-    $('.btn').removeClass('active');
-    var filter;
-    var colSelected = this.value;
-    if (['Active', 'Development', 'Inactive', 'Closed'].includes(colSelected)) {
-        // status
-        filter = cfmData.filter(function(d){ return d['Status'] == colSelected ;}) ;
-    } else{
-        // Emergency
-        if(emergenciesArr.includes(colSelected)){
-            filter = cfmData.filter(function(d){ 
+function applyAllFilters(){
+    var statusTag = "all", 
+    emergencyFilter = "all";
+    var org = $('#orgSelect').val();
+    var region = $('#regionSelect').val();
+    var data = filteredCfmData;
+    for (var i = 0; i < buttonsTags.length; i++) {
+        if ($(buttonsTags[i]).hasClass('active')) {
+            statusTag = $(buttonsTags[i]).val();
+        }
+    }
+    for (var i = 0; i < buttonsEmergency.length; i++) {
+        if ($(buttonsEmergency[i]).hasClass('active')) {
+            emergencyFilter = $(buttonsEmergency[i]).val();
+        }
+    }
+
+    if(statusTag != "all") {
+        data = data.filter(function(d){ return d['Status'] == statusTag; });
+    }
+    if(region != "all") {
+        data = data.filter(function(d){ return d['Region'] == region; });
+    }
+    if(org != "all") {
+        data = data.filter(function(d){ return d['Organisation Name'] == org; });
+    }
+    if(emergencyFilter != "all"){
+        if(emergenciesArr.includes(emergencyFilter)){
+            data = data.filter(function(d){ 
                 var arr = getFormattedColumn(d['Emergency']);
-                return arr.includes(colSelected) ;}) ;
+                return arr.includes(emergencyFilter) ;}) ;
         }else {
-            filter = cfmData.filter(function(d){ 
+            data = data.filter(function(d){ 
                 var arr = getFormattedColumn(d['Emergency']);
                 return !findOneEmergency(emergenciesArr, arr); }) ;
         }
-    }    
-    
-    updateDataTable(filter);
-    $('#orgSelect').val('all');
-    $('#regionSelect').val('all');
-    updateDataTable(filter);
-    updatePane(filter, colSelected);
+    }
+    return data;
+}
 
-}//clickButton
+function emergencyFilterclick(){
+    $('.emergency').removeClass('active');
+    $(this).toggleClass('active');
+    var filter = applyAllFilters();
+    updateDataTable(filter); 
+    updatePane(filter);
+}//emergencyFilterclick
+
+// reset all filters and filter only clicked
+function statusFilterClick(){
+    $('.filter').removeClass('active');
+    $(this).toggleClass('active');
+    var filter = applyAllFilters();
+
+    updateDataTable(filter);
+    updatePane(filter);
+}//statusFilterClick
 
 $('#orgSelect').on('change', function(d){
-    var select = $('#orgSelect').val();
-    var filter = cfmData;
-    select != "all" ? filter = cfmData.filter(function(d){ return d['Organisation Name'] == select ; }): null;
-    
-    $('#regionSelect').val('all');
+    var filter = applyAllFilters();
+    // var statusTag = "all", 
+    // emergencyFilter = "all";
+    // var dt;
+    // for (var i = 0; i < buttonsTags.length; i++) {
+    //     if ($(buttonsTags[i]).hasClass('active')) {
+    //         statusTag = $(buttonsTags[i]).val();
+    //     }
+    // }
+    // for (var i = 0; i < buttonsEmergency.length; i++) {
+    //     if ($(buttonsEmergency[i]).hasClass('active')) {
+    //         emergencyFilter = $(buttonsEmergency[i]).val();
+    //     }
+    // }
+    // if(statusTag != "all" || emergencyFilter != "all"){
+    //     console.log("you should filter tags first")
+    //     dt = getFilteredDataFromTags();
+    // }
+    // var filter = getFilteredDataFromTags();
+
+    // var all_filtersData = getFilteredDataFromDropdown(filter);
     updateDataTable(filter);
-    updatePane(filter, select);
+    // to update only if region is filtered
+    updatePane(filter);
 });
 
 $('#regionSelect').on('change', function(e){
-    var select = $('#regionSelect').val();
-    var filter = filteredCfmData;
+    var filter = applyAllFilters();
+    // var filter = getFilteredDataFromTags();
+    // var all_filtersData = getFilteredDataFromDropdown(filter);
+    // generateOrgDropdown(all_filtersData);
     
-    select != "all" ? filter = filteredCfmData.filter(function(d){ return d['Region'] == select ; }) : null;
-
-    // $('#orgSelect').val('all');
-    generateOrgDropdown(filter);
-
     updateDataTable(filter);
-    updatePane(filter, select);
-
+    updatePane(filter);
   });
 
 $('#reset-table').on('click', function(){
+    $('.emergency').removeClass('active');
+    $('.filter').removeClass('active');
+    
     $('#regionSelect').val('all');
     generateOrgDropdown();
     generateDefaultDetailPane();

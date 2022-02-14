@@ -394,7 +394,12 @@ function getEmergenciesTagged(item){
     var formattedEmergencies = "";
     items.forEach(element => {
         var className = "tag-";
-       
+        if (element == "COVID-19") {
+            className += "COVID-19";
+        } else {
+            var cat = getEmergencyCategory(element);
+            cat != "Epidemics" ? className += "other" : className += cat;
+        }
         formattedEmergencies +='<label class="alert alert-emergency '+className+'">'+element+'</label>';
     });
     return formattedEmergencies;

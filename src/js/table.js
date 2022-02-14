@@ -151,7 +151,10 @@ $("#exportTable").on("click", function() {
 function format(arr){
     console.log(arr)
     filtered = cfmData.filter(function(d){ return d['id']==arr[0]; });
-    console.log(filtered)
+    var buttonLink = "";
+    if (filtered[0]['Link'] != ""){
+        buttonLink = '<a href="'+filtered[0]['Link']+'" target="_blank"><input type="button" class="btn btn-info" value="Visit link"></a>';
+    } 
     return '<table class="tabDetail" id="cfmDetails" >'+
                 '<tr>'+
                     '<td>&nbsp;</td>'+
@@ -204,7 +207,7 @@ function format(arr){
                                         '<td>'+filtered[0]['Contact name']+'</td>'+
                                         '<td>'+filtered[0]['Contact email']+'</td>'+
                                         '<td></td>'+
-                                        '<td><a href="'+filtered[0]['Link']+'" target="_blank"><input type="button" class="btn btn-info" value="Visit link"></a></td>'+
+                                        '<td>'+buttonLink+'</td>'+
                                         '<td></td>'+
                                     '</tr>'+
                             '</tbody>'+

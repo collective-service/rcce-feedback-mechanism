@@ -1086,7 +1086,7 @@ body {
 .details {
   font-family: "Montserrat", Helvetica, Arial, Lucida, sans-serif;
   background-color: #d9d9d9;
-  height:500px;
+  height:550px;
   color: #fff;
   padding: 10px;
   width: 470px; }
@@ -1331,8 +1331,8 @@ a {
     background-color: #a49585;
     border-color: #a49585; }
 .emergencyFilter #other {
-    background-color: #cdc8c3;
-    border-color: #cdc8c3; }
+    background-color: #d9d9d9;
+    border-color: #d9d9d9; }
 
 .statusFilter #active {
   background-color: #2f9c67;
@@ -1398,18 +1398,12 @@ a {
   background-color: #2f9c67; }
 
 .tag-development {
-  width:80px;
-  text-align:center;
   background-color: #9ec8ae; }
 
 .tag-inactive {
-  width:80px;
-  text-align:center;
   background-color: #798ba5; }
 
 .tag-closed {
-  width:80px;
-  text-align:center;
   background-color: #a6b0c3; }
 
 .footer {

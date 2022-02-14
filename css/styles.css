@@ -1106,7 +1106,7 @@ body {
   .details #divider {
     width: 30px; }
     .details #divider hr {
-      border-top: 4px solid #2f9c67; }
+      border-top: 4px solid #204669; }
   .details img {
     height: 180px;
     width: 270px;
@@ -1115,14 +1115,14 @@ body {
   .details h6 {
     text-transform: uppercase;
     font-size: 17px;
-    color: #d90368;
+    color: #204669;
     padding-bottom: 10px; }
   .details .btn-info {
     margin: 10px 0 10px 0;
     color: #ffffff !important;
     border-color: rgba(0, 0, 0, 0);
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 12px;
     font-family: "Open Sans", Helvetica, Arial, Lucida, sans-serif !important;
     background-color: #2f9c67; }
   .details .key-figure {
@@ -1131,7 +1131,7 @@ body {
     .details .key-figure #sourceLabel {
       font-family: "Source Sans Pro", sans-serif;
       font-weight: normal;
-      font-size: 0.8rem;
+      font-size: 0.83rem;
       line-height: 1;
       color: #000;
       text-transform: uppercase; }
@@ -1305,8 +1305,9 @@ a {
   color: #204669; }
 
 .emergencyFilter {
-  padding: 0 8px 0 8px; }
+  padding: 2px 5px 2px 5px; }
   .emergencyFilter .btn {
+    padding: 2px 5px 2px 5px;
     outline: none;
     display: block;
     margin-left: 2px;
@@ -1352,13 +1353,13 @@ a {
 .statusFilter .btn {
   outline: none;
   display: block;
-  padding: 5px 8px 5px 8px;
+  padding: 2px 5px 2px 5px;
   font-size: 0.78rem;
   line-height: 1.5;
   color: #fff; }
 
 .alert {
-  padding: 0 8px 0 8px;
+  padding: 2px 5px 2px 5px;
   color: #fff;
   margin-right: 5px;
   border: 0; }

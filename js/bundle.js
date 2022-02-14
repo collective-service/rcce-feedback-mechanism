@@ -184,10 +184,10 @@ let currentZoom = 1;
 let mapClicked = false;
 let selectedCountryFromMap = "all";
 let countrySelectedFromMap = false;
-let mapFillColor = '#cdc8c3',//'#C2DACA',//'#2F9C67', 
+let mapFillColor = '#2F9C67',//'#C2DACA',//'#2F9C67', 
     mapInactive = '#fff',//'#DBDEE6',//'#f1f1ee',//'#C2C4C6',
-    mapActive = '#2F9C67',
-    hoverColor = '#2F9C67';//'#78B794';
+    mapActive = '#D90368',
+    hoverColor = '#E27093';//'#78B794';
 
 function initiateMap() {
     width = viewportWidth;
@@ -199,7 +199,7 @@ function initiateMap() {
     projection = d3.geoMercator()
         .center(mapCenter)
         .scale(mapScale)
-        .translate([width / 2.9, height / 1.6]);
+        .translate([width / 2.9, height / 1.9]);
 
     path = d3.geoPath().projection(projection);
 

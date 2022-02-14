@@ -1086,15 +1086,15 @@ body {
 .details {
   font-family: "Montserrat", Helvetica, Arial, Lucida, sans-serif;
   background-color: #d9d9d9;
-  height:550px;
+  height:500px;
   color: #fff;
   padding: 10px;
-  width: 470px; }
+  width: 550px; }
   .details p {
     color: #000;
     text-align: justify;
-    padding-bottom: 15px;
-    font-size: 0.75rem; }
+    padding-bottom: 10px;
+    font-size: 0.83rem; }
   .details .label {
     fill: #fff; }
   .details h5 {

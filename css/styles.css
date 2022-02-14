@@ -1108,8 +1108,8 @@ body {
     .details #divider hr {
       border-top: 4px solid #D90368; }
   .details img {
-    height: 170px;
-    width: 240px;
+    height: 165px;
+    width: 220px;
     padding-right: 10px;
     padding-bottom: 15px; }
   .details h6 {
@@ -1393,15 +1393,19 @@ a {
   border-color: #cdc8c3; }
 
 .tag-active {
+  width:50px;
   background-color: #2f9c67; }
 
 .tag-development {
+  width:50px;
   background-color: #9ec8ae; }
 
 .tag-inactive {
+  width:50px;
   background-color: #798ba5; }
 
 .tag-closed {
+  width:50px;
   background-color: #a6b0c3; }
 
 .footer {

@@ -724,6 +724,8 @@ function emergencyFilterclick(){
     var filter = applyAllFilters();
     updateDataTable(filter); 
     updatePane(filter);
+    //reset map
+    mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
 }//emergencyFilterclick
 
 // reset all filters and filter only clicked
@@ -734,24 +736,32 @@ function statusFilterClick(){
 
     updateDataTable(filter);
     updatePane(filter);
+    //reset map
+    mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
 }//statusFilterClick
 
 $('#statusSelect').on('change', function(d){
     var filter = applyAllFilters();
     updateDataTable(filter);
     updatePane(filter);
+    //reset map
+    mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
 });
 
 $('#orgSelect').on('change', function(d){
     var filter = applyAllFilters();
     updateDataTable(filter);
     updatePane(filter);
+    //reset map
+    mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
 });
 
 $('#regionSelect').on('change', function(e){
     var filter = applyAllFilters();
     updateDataTable(filter);
     updatePane(filter);
+    //reset map
+    mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
   });
 
 $('#reset-table').on('click', function(){

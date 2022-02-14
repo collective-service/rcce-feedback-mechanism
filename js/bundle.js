@@ -184,7 +184,7 @@ let currentZoom = 1;
 let mapClicked = false;
 let selectedCountryFromMap = "all";
 let countrySelectedFromMap = false;
-let mapFillColor = '#204669',//'#C2DACA',//'#2F9C67', 
+let mapFillColor = '#cdc8c3',//'#C2DACA',//'#2F9C67', 
     mapInactive = '#fff',//'#DBDEE6',//'#f1f1ee',//'#C2C4C6',
     mapActive = '#2F9C67',
     hoverColor = '#2F9C67';//'#78B794';
@@ -240,8 +240,8 @@ function initiateMap() {
             .attr('fill', function(d){
               return countriesISO3Arr.includes(d.properties.ISO_A3) ? mapFillColor : mapInactive ;
             })
-            .attr('stroke-width', .2)
-            .attr('stroke', '#ccc');
+            .attr('stroke-width', .1)
+            .attr('stroke', '#7b6a58');
 
     mapsvg.transition()
     .duration(750)

@@ -437,15 +437,15 @@ function generateDataTable(){
                 "className": 'details-control',
                 "orderable": false,
                 "data": null,
-                "defaultContent": '<i class="fa fa-plus-circle"></i>',
+                "defaultContent": '<i class="fa fa-caret-down"></i>',
                 "width": "1%"
             },
             {"width": "10%"},
             {"width": "8%"},
+            {"width": "4%"},
+            {"width": "8%"},
             {"width": "5%"},
-            {"width": "10%"},
-            {"width": "5%"},
-            {"width": "15%"},
+            {"width": "18%"},
             {"width": "1%"}
         ],
         "columnDefs": [

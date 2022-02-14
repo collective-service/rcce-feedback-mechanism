@@ -16,6 +16,22 @@ function getFormattedStatus(item){
     return formatedDims;
 }//getFormattedStatus
 
+function getEmergenciesTagged(item){
+    var items = getFormattedColumn(item);
+    var formattedEmergencies = "";
+    items.forEach(element => {
+        var className = "tag-";
+        if (element == "COVID-19") {
+            className += "COVID-19";
+        } else {
+            var cat = getEmergencyCategory(element);
+            cat != "Epidemics" ? className += "other" : className += cat;
+        }
+        formattedEmergencies +='<label class="alert alert-emergency '+className+'">'+element+'</label>';
+    });
+    return formattedEmergencies;
+}//getEmergenciesTagged
+
 function getDataTableData(data = filteredCfmData){
     var dt = [];
     data.forEach(element => {
@@ -25,9 +41,9 @@ function getDataTableData(data = filteredCfmData){
                 element['Organisation Name'],
                 element['Country'],
                 getFormattedStatus(element['Status']), 
+                getEmergenciesTagged(element['Emergency']),
                 element['Frequency'], 
-                element['Channels'],
-                element['Emergency'], 
+                element['Channels'], 
                 element['Link'] != '' ? '<a href="'+element['Link']+'" target="blank"><i class="fa fa-external-link"></i></a>' : null,
                 //hidden
                 element['Name'], element['Scale'], element['# Feedbacks (last 6 months)'], element['Target'],
@@ -52,10 +68,10 @@ function generateDataTable(){
                 "width": "1%"
             },
             {"width": "10%"},
-            {"width": "15%"},
+            {"width": "8%"},
+            {"width": "5%"},
             {"width": "10%"},
             {"width": "5%"},
-            {"width": "25%"},
             {"width": "15%"},
             {"width": "1%"}
         ],
@@ -75,7 +91,7 @@ function generateDataTable(){
             // { "searchable" : true, "targets": "_all"},
             // {"type": "myDate","targets": 4}
         ],
-        "pageLength": 20,
+        "pageLength": 10,
         "bLengthChange": false,
         "pagingType": "simple_numbers",
         "order":[[1, 'asc']],
@@ -129,7 +145,6 @@ function generateDataTable(){
 
 $("#exportTable").on("click", function() {
     // datatable.button( '.buttons-excel' ).trigger();
-    console.log("downloading...")
     $(".buttons-excel").trigger("click");
 });
 
@@ -140,41 +155,101 @@ function format(arr){
                     '<td>&nbsp;</td>'+
                     '<td>&nbsp;</td>'+
                     '<td>&nbsp;</td>'+
+                    '<td>&nbsp;</td>'+
+                    '<td>&nbsp;</td>'+
+                    '<td>&nbsp;</td>'+
                     '<td>'+
-                        '<table>'+
-                            '<tbody>'+
-                                '<tr>'+
-                                    '<td><strong>Name</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Name']+'</td>'+
-                                    '<td><strong>Start date</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Start date']+'</td>'+
-                                    '<td><strong># Feedback</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['# Feedbacks (last 6 months)']+'</td>'+
-                                '</tr>'+
-                                '<tr>'+
-                                    '<td><strong>Scale</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Scale']+'</td>'+
-                                    '<td><strong>National Coordination<strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['National Coordination']+'</td>'+
-                                    '<td><strong>Partners<strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Partners']+'</td>'+
-                                '</tr>'+
-                                '<tr>'+
-                                    '<td><strong>Status<s/trong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Status']+'</td>'+
-                                    '<td><strong>Interagency</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Inter-agency']+'</td>'+
-                                    '<td><strong>Keywords</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Keyword']+'</td>'+
-                                '</tr>'+
-                                '<tr>'+
-                                    '<td><strong>Target</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Target']+'</td>'+
-                                    '<td><strong>Contact<strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Contact email']+'</td>'+
-                                    '<td><strong>Details<strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Details']+'</td>'+
-                            '</tr>'+
+                        '<table style="width:100%;">'+
+                            // '<tbody>'+
+                            // '<thead>'+
+                            //     '<tr>'+
+                            //         '<th>Details</th>'+
+                            //         '<th></th>'+
+                            //         '<th></th>'+
+                            //         '<th></th>'+
+                            //         '<th></th>'+
+                            //         '<th></th>'+
+                            //     '</tr>'+
+                            // '</thead>'+
+                                '<tbody>'+
+                                    '<tr>'+
+                                        '<td><strong>Name</strong></td>'+
+                                        '<td>'+filtered[0]['Name']+'</td>'+
+                                        '<td><strong>Start date</strong></td>'+
+                                        '<td>'+filtered[0]['Start date']+'</td>'+
+                                        '<td><strong>National Coordination</strong></td>'+
+                                        '<td>'+filtered[0]['National Coordination']+'</td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td><strong>#Feedback</strong></td>'+
+                                        '<td>'+filtered[0]['# Feedbacks (last 6 months)']+'</td>'+
+                                        '<td><strong>Scale<s/trong></td>'+
+                                        '<td>'+filtered[0]['Scale']+'</td>'+
+                                        '<td><strong>Interagency</strong></td>'+
+                                        '<td>'+filtered[0]['Inter-agency']+'</td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td><strong>Target</strong></td>'+
+                                        '<td colspan="3">'+filtered[0]['Target']+'</td>'+
+                                        '<td><strong>Partners</strong></td>'+
+                                        '<td>'+filtered[0]['Partners']+'</td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td><strong>Description</strong></td>'+
+                                        '<td colspan="3">'+filtered[0]['Details']+'</td>'+
+                                        '<td colspan="2" rowspan="2"></td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td><strong>Actions</strong></td>'+
+                                        '<td colspan="3"></td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td><strong>Keywords</strong></td>'+
+                                        '<td colspan="3">'+filtered[0]['Keyword']+'</td>'+
+                                        '<td colspan="2"></td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td><strong>Contact</strong></td>'+
+                                        '<td>'+filtered[0]['Contact name']+'</td>'+
+                                        '<td>'+filtered[0]['Contact email']+'</td>'+
+                                        '<td></td>'+
+                                        '<td>button</td>'+
+                                        '<td></td>'+
+                                    '</tr>'+
+                                // '</tbody>'+
+                            // '</table>'+
+                            //     '<tr>'+
+                            //         '<td><strong>Name</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Name']+'</td>'+
+                            //         '<td><strong>Start date</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Start date']+'</td>'+
+                            //         '<td><strong># Feedback</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['# Feedbacks (last 6 months)']+'</td>'+
+                            //     '</tr>'+
+                            //     '<tr>'+
+                            //         '<td><strong>Scale</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Scale']+'</td>'+
+                            //         '<td><strong>National Coordination<strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['National Coordination']+'</td>'+
+                            //         '<td><strong>Partners<strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Partners']+'</td>'+
+                            //     '</tr>'+
+                            //     '<tr>'+
+                            //         '<td><strong>Status<s/trong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Status']+'</td>'+
+                            //         '<td><strong>Interagency</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Inter-agency']+'</td>'+
+                            //         '<td><strong>Keywords</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Keyword']+'</td>'+
+                            //     '</tr>'+
+                            //     '<tr>'+
+                            //         '<td><strong>Target</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Target']+'</td>'+
+                            //         '<td><strong>Contact<strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Contact email']+'</td>'+
+                            //         '<td><strong>Details<strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Details']+'</td>'+
+                            // '</tr>'+
                             '</tbody>'+
                         '</table>'+
                     '</td>'+
@@ -249,7 +324,7 @@ function getFormattedColumn(item){
     var trimedArr = arr.map(x => x.trim());
     for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
         if (trimedArr[index]) {
-            items.push(trimedArr[index])
+            items.push(trimedArr[index]);
         }
     }
     return items;
@@ -261,9 +336,6 @@ for (var i = 0; i < buttonsTags.length; i++) {
 }
 
 var buttonsEmergency = document.getElementsByClassName("emergency");
-for (var i = 0; i < buttonsEmergency.length; i++) {
-    buttonsEmergency[i].addEventListener('click', emergencyFilterclick);   
-}
 
 function findOneEmergency(emergenciesArrTest, arr) {
     return arr.some(function (v) {
@@ -298,14 +370,16 @@ function applyAllFilters(){
         data = data.filter(function(d){ return d['Organisation Name'] == org; });
     }
     if(emergencyFilter != "all"){
-        if(emergenciesArr.includes(emergencyFilter)){
+        if(emergencyFilter == "COVID-19"){
             data = data.filter(function(d){ 
                 var arr = getFormattedColumn(d['Emergency']);
                 return arr.includes(emergencyFilter) ;}) ;
         }else {
-            data = data.filter(function(d){ 
+            var emergencies = getSubValues(emergencyFilter, emergencyData);
+            data = data.filter(function(d){
                 var arr = getFormattedColumn(d['Emergency']);
-                return !findOneEmergency(emergenciesArr, arr); }) ;
+                return findOneEmergency(emergencies, arr);
+            })
         }
     }
     return data;
@@ -331,37 +405,12 @@ function statusFilterClick(){
 
 $('#orgSelect').on('change', function(d){
     var filter = applyAllFilters();
-    // var statusTag = "all", 
-    // emergencyFilter = "all";
-    // var dt;
-    // for (var i = 0; i < buttonsTags.length; i++) {
-    //     if ($(buttonsTags[i]).hasClass('active')) {
-    //         statusTag = $(buttonsTags[i]).val();
-    //     }
-    // }
-    // for (var i = 0; i < buttonsEmergency.length; i++) {
-    //     if ($(buttonsEmergency[i]).hasClass('active')) {
-    //         emergencyFilter = $(buttonsEmergency[i]).val();
-    //     }
-    // }
-    // if(statusTag != "all" || emergencyFilter != "all"){
-    //     console.log("you should filter tags first")
-    //     dt = getFilteredDataFromTags();
-    // }
-    // var filter = getFilteredDataFromTags();
-
-    // var all_filtersData = getFilteredDataFromDropdown(filter);
     updateDataTable(filter);
-    // to update only if region is filtered
     updatePane(filter);
 });
 
 $('#regionSelect').on('change', function(e){
     var filter = applyAllFilters();
-    // var filter = getFilteredDataFromTags();
-    // var all_filtersData = getFilteredDataFromDropdown(filter);
-    // generateOrgDropdown(all_filtersData);
-    
     updateDataTable(filter);
     updatePane(filter);
   });

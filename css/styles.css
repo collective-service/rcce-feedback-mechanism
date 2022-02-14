@@ -1294,25 +1294,23 @@ a {
 
 .emergencyFilter {
   padding: 0 10px 0 10px; }
-  .emergencyFilter #covid {
-    background-color: #d90368;
-    border-color: #d90368; }
-  .emergencyFilter #ebola {
-    background-color: #e27093;
-    border-color: #e27093; }
-  .emergencyFilter #dengue {
-    background-color: #f0bdc9;
-    border-color: #f0bdc9; }
-  .emergencyFilter #ohterOutbreak {
-    background-color: #e996ad;
-    border-color: #e996ad; }
   .emergencyFilter .btn {
     outline: none;
     display: block;
-    padding: 5px 8px 5px 8px;
+    margin-left: 2px;
+    margin-right: 2px;
     font-size: 0.78rem;
     line-height: 1.5;
     color: #fff; }
+  .emergencyFilter #COVID-19 {
+    background-color: #d90368;
+    border-color: #d90368; }
+  .emergencyFilter #Epidemics {
+    background-color: #e27093;
+    border-color: #e27093; }
+  .emergencyFilter #other {
+    background-color: #7a7c7f;
+    border-color: #7a7c7f; }
 
 .statusFilter #active {
   background-color: #2f9c67;
@@ -1342,8 +1340,23 @@ a {
   padding: 0 5px 0 5px;
   color: #fff;
   margin-right: 5px;
-  border: 0;
-  border-radius: 0.5rem; }
+  border: 0; }
+
+.alert-emergency {
+  background-color: #a6b0c3;
+  border-color: #a6b0c3; }
+
+.tag-COVID-19 {
+  background-color: #d90368;
+  border-color: #d90368; }
+
+.tag-Epidemics {
+  background-color: #e27093;
+  border-color: #e27093; }
+
+.tag-other {
+  background-color: #7a7c7f;
+  border-color: #7a7c7f; }
 
 .tag-active {
   background-color: #2f9c67; }
@@ -1371,7 +1384,8 @@ a {
   line-height: 1.5; }
 
 #cfmDetails {
-  background-color: #f5f5f5; }
+  background-color: #f5f5f5;
+  width: 100%; }
 
 table.tabDetail tbody tr {
   background-color: #f5f5f5; }
@@ -1392,3 +1406,6 @@ table.tabDetail tbody tr {
     display: inline; }
   .btn-tertiary {
     display: inline; } }
+
+.footer {
+  padding-top: 10px; }

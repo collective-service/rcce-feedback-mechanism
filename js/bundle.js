@@ -3,7 +3,7 @@ let numberCountriesCFM = 0;
 let regionsArr = ['All regions'],
     organisationsArr = ['All organizations'];
 let countriesISO3Arr = [];
-let emergenciesArr = ['COVID-19', 'Ebola', 'Dengue'];
+let emergenciesArr = ['COVID-19'];
 
 function choroplethMap(){
     mapsvg.selectAll('path').each( function(element, index) {
@@ -113,471 +113,66 @@ function generateOrgDropdown(data){
 } //generateRegionDropdown
 
 
-function generateEmergencyTag(){
-    var options = "";
-    for (let index = 0; index < organisationsArr.length; index++) {
-        const element = organisationsArr[index];
-        index == 0 ? options += '<option value="all" selected>' + element + '</option>'  : 
-            options += '<option value="' + element + '">' + element + '</option>';
+function generateEmergencyTags(){
+    var labels = "";
+    for (let index = 0; index < emergenciesArr.length; index++) {
+        const element = emergenciesArr[index];
+        const idy = (['COVID-19', 'Epidemics'].includes(element) ? element : "other")
+        labels +='<label><button type="button" class="btn btn-secondary emergency" id="'+idy+'" value="'+element+'">'+element+'</button></label>';
     }
-    $('#orgSelect').append(options);
-    $('#all').toggleClass('active');
+    $('.emergencyFilter').append(labels);
+    var buttonsEmergency = document.getElementsByClassName("emergency");
+    for (var i = 0; i < buttonsEmergency.length; i++) {
+        buttonsEmergency[i].addEventListener('click', emergencyFilterclick);   
+    }
 
-} //generateRegionDropdown
+} //function generateEmergencyTags(){
 
-// let purposeArr = ['Perception', 'Rumors', 'Questions'],
-//     purposeOtherArr = ['suggestions', 'Complaints', 'Accountability'],
-//     emergencyArr = ['COVID-19', 'Ebola', 'Dengue'],
-//     emergencyOtheArr = ['Protection', 'Migrant', 'Refugeees'];
-// // colors 
-// let ifrcPink_1 = '#D90368', ifrcPink_2 = '#E27093', ifrcPink_3 = '#E996AD', ifrcPink_4 = '#F0BDC9', ifrcPink_5 = '#FAE7EA';
-// let ifrcGreen_1 = '#2F9C67', ifrcGreen_2 = '#78B794', ifrcGreen_3 = '#9EC8AE', ifrcGreen_4 = '#C2DACA', ifrcGreen_5 = '#E9F1EA';
-// let ifrcBlue_1 = '#204669', ifrcBlue_2 = '#546B89', ifrcBlue_3 = '#798BA5', ifrcBlue_4 = '#A6B0C3', ifrcBlue_5 = '#DBDEE6';
-// let ifrcYellow = '#FCCF9E';
-// let mapActiveColor = '#2F9C67',
-//     mapInactiveColor = '#C2DACA',//'#d1021a',
-//     mapPipelineColor = '#78B794';
+function getSubValues(lookUp, nestedArr){
+    var arrKey = [],
+        arrValues = [];
+    nestedArr.forEach(element => {
+        element.key == lookUp ? arrKey = element.values : null;
+    });
+    if(arrKey != []){
+        arrKey.forEach(element => {
+            arrValues.push(element.key)
+        });
+    }
+    return arrValues;
+}//getSubValues
 
-// var mapColorRangeDefault = [ifrcBlue_3, ifrcBlue_2, ifrcBlue_1];
-// // let mapInactive = '#a6d8e8';
+function getEmergencyCategory(lookUp){
+    var emer ;
+    emergencyData.forEach(element => {
+        var arr = element.values;
+        // for (let index = 0; arr < arr.length; index++) {
+        //     const item = arr[index];
+        //     console.log(item)
+        //     item.key == lookUp ? emer = element.key : null;
+        //     break;
+        // }
+        arr.forEach(item => {
+            item.key == lookUp ? emer = element.key : null;
+        });
+    });
+    return emer;
+}//getEmergencyCategory
 
-// let numberCountriesCFM = 0;
-// let regionsArr = ['All regions'],
-//     organisationsArr = ['All organizations'];
-// let countriesISO3Arr = [];
-
-// let statusChart ;
-
-// let datatable;
-
-// let focusCovid = ['COVID-19', 'COVID-19, Volcano', 'COVID-19, Accountability'],
-//     focusMigrant = ['Migrant'],
-//     focusOther = ['Protection'];
-
-// var sort_value = function (d1, d2) {
-//     if (d1.value > d2.value) return -1;
-//     if (d1.value < d2.value) return 1;
-//     return 0;
-// }
-
-// // get and set # countries with CFM
-// function setCountriesAndOrgCFM(){
-//     var arrCountries = [],
-//         arrOrgs = [];
-//     countriesISO3Arr = [];
-//     filteredCfmData.forEach(element => {
-//         arrCountries.includes(element['Country']) ? '' : arrCountries.push(element['Country']);
-//         arrOrgs.includes(element['Organisation Name']) ? '' : arrOrgs.push(element['Organisation Name']);
-//         // regionsArr.includes(element['Region']) ? '' : regionsArr.push(element['Region']);
-//         countriesISO3Arr.includes(element['ISO3']) ? '' : countriesISO3Arr.push(element['ISO3']);
-//     });
-//     $('#totalCfms').text(filteredCfmData.length);
-//     $('#countriesCFM').text(arrCountries.length);
-//     $('#orgsCFM').text(arrOrgs.length);
-// } //setCountriesAndOrgCFM
-
-// // populate regions selections via the data
-// function regionSelectionDropdown(){
-//     var options = "",
-//         orgOptions = "";
-//     cfmData.forEach(element => {
-//         regionsArr.includes(element['Region']) ? '' : regionsArr.push(element['Region']);
-//         organisationsArr.includes(element['Organisation Name']) ? '' : organisationsArr.push(element['Organisation Name']);
-//     });
-//     for (let index = 0; index < regionsArr.length; index++) {
-//         const element = regionsArr[index];
-//         index == 0 ? options += '<option value="all" selected>' + element + '</option>'  : 
-//             options += '<option value="' + element + '">' + element + '</option>';
-//     }
-//     for (let index = 0; index < organisationsArr.length; index++) {
-//         const element = organisationsArr[index];
-//         index == 0 ? orgOptions += '<option value="all" selected>' + element + '</option>'  : 
-//         orgOptions += '<option value="' + element + '">' + element + '</option>';
-//     }
-//     $('#regionSelect').append(options);
-//     $('#regionSelect').multipleSelect();
-
-//     $('#orgSelect').append(orgOptions);
-//     $('#orgSelect').multipleSelect({
-//         filter: true
-//     });
-// }//regionSelectionDropdown
-
-// // returns a formatted array with purposes/emergencies 
-// function getFormattedColumn(item, column){
-//     var items = [] ;
-//     var arr = item.split(",");
-//     var trimedArr = arr.map(x => x.trim());
-//     for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
-//         if (trimedArr[index]) {
-//             items.push(trimedArr[index])
-//         }
-//     }
-//     var formatedPurposes = "";
-//     items.forEach(d => {
-//         var className = d.toLowerCase();
-//         var arrPurpose = ['perception', 'rumors', 'questions'];
-//         var arrFocus = ['covid-19', 'ebola'];
-//         if (column == 'Purpose') {
-//             arrPurpose.includes(className) ? '' : className = 'purpose-other';
-//         } else{
-//             arrFocus.includes(className) ? '' : className = 'emergency-other';
-//         }
-        
-//         formatedPurposes +='<label class="alert tag-'+className+'">'+d+'</label>';
-//     });
-//     return formatedPurposes;
-// } // getFormattedColumn
-
-// function getDataTableData(data = filteredCfmData){
-//     var dtData = [];
-//     data.forEach(element => {
-//         var cfmstatusColor = ifrcGreen_1;
-//         // element['Status'] == "Inactive" ? cfmstatusColor =  ifrcGreen_5 : 
-//         // element['Status'] == "Pipeline" ? cfmstatusColor =  ifrcGreen_3 : null;
-//         dtData.push([
-//                     // '<i class="fa fa-circle fa-md" style="color:'+cfmstatusColor+';"></i>',
-//                     '',
-//                     element['Country'], 
-//                     element['Organisation Name'],  
-//                     getFormattedColumn(element['Purpose'], 'Purpose'),
-//                     getFormattedColumn(element['Emergency'], 'Emergency'),
-//                     element['Link'] != "" ? '<a href="'+element['Link']+'" target="blank"><i class="fa fa-external-link"></i></a>' : "-",
-//                     element['id']
-//         ]);
-//     });
-
-//     return dtData;
-// }
-
-// // generate data table
-// function generateDataTable(){
-//     var dtData = getDataTableData();
-//     datatable = $('#datatable').DataTable({
-//         data : dtData,
-//         "columns": [
-//             {   "width": "1%",  
-//                 "className": 'details-control', 
-//                 "orderable": false,
-//                 "data": null,
-//                 "defaultContent": '<i class="fa fa-plus-circle"></i>',  
-//             },
-//             // {"width": "1%","orderable": false},
-//             {"width": "15%"},
-//             {"width": "20%", "orderable": false},
-//             {"width": "45%", "orderable": false},
-//             {"width": "50%", "orderable": false},
-//             {"width": "1%", "orderable": false}
-//             // {"width": "1%", "orderable": false}
-//         ],
-//         "columnDefs": [
-//             {
-//                 "className": "dt-head-left",
-//                 "targets": "_all"
-//             },
-//             {
-//                 "defaultContent": "-",
-//                 "targets": "_all"
-//             },
-//             {"targets": [6], "visible": false, "orderable": false}
-//         ],
-//         "pageLength": 10,
-//         "bLengthChange": false,
-//         "pagingType": "simple_numbers",
-//         "order":[[1, 'asc']], 
-//         "dom": "lrtp"
-//     });
-
-//     $('#datatable tbody').on('click', 'td.details-control', function(){
-//         var tr = $(this).closest('tr');
-//         var row = datatable.row(tr);
-
-//         if(row.child.isShown()){
-//             row.child.hide();
-//             tr.removeClass('shown');
-//             tr.css('background-color', '#fff');
-//             tr.find('td.details-control i').removeClass('fa-minus-circle');
-//             tr.find('td.details-control i').addClass('fa-plus-circle');
-//         }
-//         else {
-//             row.child(format(row.data())).show();
-//             tr.addClass('shown');
-//             tr.css('background-color', '#f5f5f5');
-//             $('#cfmDetails').parent('td').css('border-top', 0);
-//             // $('#cfmDetails').parent('td').css('padding-top', 0);
-//             $('#cfmDetails').parent('td').css('padding', 0);
-//             $('#cfmDetails').parent('td').css('background-color', '#f5f5f5');
-//             tr.find('td.details-control i').removeClass('fa-plus-circle');
-//             tr.find('td.details-control i').addClass('fa-minus-circle');
-
-//         }
-//     });
-// } //generateDataTable
+function clearnChannels(channel){
+    channel = channel.replace(",", "")
+    // var items = [] ;
+    // var arr = channel.split(",");
+    // var trimedArr = arr.map(x => x.trim());
+    // for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
+    //     if (trimedArr[index]) {
+    //         items.push(trimedArr[index]);
+    //     }
+    // }
+    // console.log(items)
+}
 
 
-// function format(arr){
-//     var detailsData = cfmData.filter(function(d){ return d['id'] == arr[arr.length -1]});
-    
-//     var table  = '<table id="cfmDetails" class="tabDetail">'+
-//                         '<tr>'+
-//                             '<td>&nbsp;</td>'+
-//                             '<td>&nbsp;</td>'+
-//                             '<td>&nbsp;</td>'+
-//                             '<td>'+
-//                                 '<table>'+
-//                                     '<tbody>'+
-//                                         '<tr>'+
-//                                             '<td>NAME</td>'+
-//                                             '<td>name</td>'+
-//                                             '<td>CONTACT</td>'+
-//                                             '<td>contact</td>'+
-//                                         '</tr>'+
-//                                         '<tr>'+
-//                                             '<td>COLLECTIVE TOOLS</td>'+
-//                                             '<td>collective_tools</td>'+
-//                                             '<td>OTHER FOCUS</td>'+
-//                                             '<td>other_focus</td>'+
-//                                         '</tr>'+
-//                                         '<tr>'+
-//                                             '<td>SCALE</td>'+
-//                                             '<td>scale</td>'+
-//                                             '<td>START DATE</td>'+
-//                                             '<td>start_date</td>'+
-//                                         '</tr>'+
-//                                         '<tr>'+
-//                                             '<td># FEEDBACK</td>'+
-//                                             '<td>feedback</td>'+
-//                                             '<td>CHANNEL DETAILS</td>'+
-//                                             '<td>channel_details</td>'+
-//                                             '<td>PARTNERS</td>'+
-//                                             '<td>partners</td>'+
-//                                         '</tr>'+
-//                                     '</tbody>'+
-//                                 '</table>'+
-//                             '</td>'+
-//                             '<td>&nbsp;</td>'+
-//                         '</tr>'
-//                  '</table>';
-//     return table;
-// }
-
-// function generateBarChart(){
-//     var data = d3.nest() 
-//         .key(function(d) { return d['Status']; })
-//         .rollup(function(d) { return d.length ;})
-//         .entries(filteredCfmData).sort(sort_value);
-//     var arrX = ['x'],
-//         arrY = ['Status'];
-//     data.forEach(element => {
-//         arrX.includes(element.key) ? '' : arrX.push(element.key);
-//         arrY.includes(element.key) ? '' : arrY.push(element.value);
-//     });
-//     var chart = c3.generate({
-//         bindto: '#statusChart',
-//         size: { height: 100 },
-//         // padding: {right: 10, left: 180},
-//         data: {
-//             x: 'x',
-//             columns: [arrX, arrY],
-//             type: 'bar'
-//         },
-//         bar: {
-//             width: 10
-//         },
-//         color: {
-//             pattern: [ifrcGreen_2]
-//         },
-//         axis: {
-//             rotated : true,
-//           x: {
-//               type : 'category',
-//               tick: {               
-//                 outer: false,
-//                 multiline: false,
-//                 fit: true,}
-//           },
-//           y: {
-//             tick: {
-//                 outer: false,
-//                 format: d3.format('d'),
-//                 count: 3
-//             }
-//           } 
-//         },
-//         // grid: {
-//         //      y: {
-//         //          show: true
-//         //      }
-//         // },
-//         legend: {
-//             show: false
-//         },
-//         tooltip: {
-//             format: {
-//                 value: function(value){
-//                     return d3.format('d')(value)
-//                 }
-//             }
-//         }
-//     }); 
-//     return chart;
-// } //generateBarChart 
-
-// // return mapActiveColor, mapInactiveColor or mapPipelineColor based on the corresponding status
-// function getColorFromStatus(status, cercle = false) {
-//     if (cercle){
-//         mapActiveColor = ifrcGreen_1,
-//         mapPipelineColor = ifrcYellow,
-//         mapInactiveColor = 'grey';
-//     }
-//     var st = status.trim().toLowerCase();
-//     var clr = mapInactive;
-//     st == 'active' ? clr = mapActiveColor : 
-//     st == 'inactive' ? clr = mapInactiveColor :
-//     st == 'pipeline' ? clr = mapPipelineColor : null;
-//     return clr;
-// } //getColorFromStatus 
-
-// // get country CFM color
-// function getRightCountryCFMColor(data, cercle = false){
-//     if (cercle){
-//         mapActiveColor = ifrcGreen_1,
-//         mapPipelineColor = ifrcYellow,
-//         mapInactiveColor = 'grey';
-//     }
-//     var color ;
-//     if (data.length == 0) {
-//         color = mapInactive;//getColorFromStatus(data['Status']);
-//     } else if(data.length > 0) {
-//         var colors = [];
-//         for (let index = 0; index < data.length; index++) {
-//             var c = getColorFromStatus(data[index]['Status'], cercle  = cercle);
-//             colors.includes(c) ? '' : colors.push(c);            
-//         }
-//         colors.includes(mapActiveColor) ? color = mapActiveColor :
-//         colors.includes(mapPipelineColor) ? color = mapPipelineColor :
-//         colors.includes(mapInactiveColor) ? color = mapInactiveColor : null;
-        
-//     }
-//     return color;
-// }
-// // choropleth map
-// function choroplethMap(focusArea = "all"){
-//     mapsvg.selectAll('path').each( function(element, index) {
-//         // console.log(element)
-//         d3.select(this).transition().duration(500).attr('fill', function(d){
-//             var filtered = filteredCfmData.filter(pt => pt['ISO3']== d.properties.ISO_A3);
-//             return getRightCountryCFMColor(filtered);
-//         });
-//     });
-//     // cercle
-//     // mapsvg.selectAll('circle').each( function(element, index) {
-//     //     // console.log(element)
-//     //     d3.select(this).transition().duration(500).attr("r", 3).attr('fill', function(d){
-//     //         var filtered = filteredCfmData.filter(pt => pt['ISO3']== d['ISO_A3']);
-//     //         // console.log(filtered)
-//     //         return getRightCountryCFMColor(filtered, true);
-//     //     });
-//     // });
-// }
-
-// // update viz based on filtered and selections
-// function updateViz() {
-//     setCountriesAndOrgCFM();
-//     choroplethMap();
-//     var data = d3.nest() 
-//         .key(function(d) { return d['Status']; })
-//         .rollup(function(d) { return d.length ;})
-//         .entries(filteredCfmData).sort(sort_value);
-//     var arrX = ['x'],
-//         arrY = ['Status'];
-//     data.forEach(element => {
-//         arrX.includes(element.key) ? '' : arrX.push(element.key);
-//         arrY.includes(element.key) ? '' : arrY.push(element.value);
-//     });
-//     // statusChart.load({columns: [arrX, arrY], unload: true });
-
-//     // update datatable
-//     var dt = getDataTableData();
-//     $('#datatable').dataTable().fnClearTable();
-//     $('#datatable').dataTable().fnAddData(dt);
-
-//     // reset CFM purpose text
-//     // $('.purpose > span > label').text("(Select Country)");
-// } //updateViz
-
-// //filter 
-// function purposeByItem(item, arr) {
-// 	var included = false;
-// 	for (var i=0; i<arr.length; i++) {
-// 	  if (item.includes(arr[i])) {
-// 	    included = true;
-// 	    break;
-// 	  }
-// 	}
-// 	return included;
-// }
-
-// function clickButton(){
-//     var val = this.value;
-//     var colName = (['Perception', 'Rumors', 'Questions', 'purpose-other'].includes(val)) ? 'Purpose' : 
-//                 (['COVID-19', 'Ebola', 'emergency-other'].includes(val)) ? 'Emergency' : "";
-//     var filteredData = filteredCfmData.filter(function(d){
-//         if (colName == 'Purpose') {
-//             if (val != 'purpose-other') {
-//                 return d['Purpose'].includes(val);
-//             } else {
-//                 return (d['Purpose'].includes('Suggestions') || d['Purpose'].includes('Complaints') || d['Purpose'].includes('Accountability'));
-//             }
-//         } else if (colName == 'Emergency') {
-//             if (val == 'COVID-19' || val == 'Ebola') {
-//                 return d['Emergency'].includes(val);
-//             } else {
-//                 // return (d['Emergency'].includes('Migrant') || d['Emergency'].includes('Protection') || d['Emergency'].includes('Refugees'));
-//                 return (d['Emergency'].includes(['Migrant']) || d['Emergency'].includes(['Refugees']) || d['Emergency'].includes(['Volcano']) || d['Emergency'].includes(['Dengue']) || d['Emergency'].includes(['Protection']) || d['Emergency'].includes(['Youth']));
-//             }
-//         }
-//     });
-
-//     // // update datatable
-//     var dt = getDataTableData(filteredData);
-//     $('#datatable').dataTable().fnClearTable();
-//     $('#datatable').dataTable().fnAddData(dt);
-// }// clickButton
-
-// var buttons = document.getElementsByClassName("filter");
-// for (var i = 0; i < buttons.length; i++) {
-//     buttons[i].addEventListener("click", clickButton);        
-// }
-
-// function getFilteredDataFromSelection(){
-//     var regionSelected = $('#regionSelect').val();
-//     var orgSelected = $('#orgSelect').val();
-//     if ((regionSelected == "all") && (orgSelected == "all")) {        
-//         // reset map zoom to global
-//         mapsvg.transition()
-//         .duration(750)
-//         .call(zoom.transform, d3.zoomIdentity);
-//         return cfmData;
-//     } else if((regionSelected != "all") && (orgSelected != "all")){
-//         return cfmData.filter(function(d){
-//             return ((d['Region'] == regionSelected) && (d['Organisation Name'] == orgSelected));
-//         }) 
-//     } else {
-//         var columnOfInterest = "",
-//             valueOfInterest = "";
-//         if (regionSelected != 'all') {
-//             columnOfInterest = 'Region';
-//             valueOfInterest = regionSelected;
-//         } else {
-//             columnOfInterest = 'Organisation Name';
-//             valueOfInterest = orgSelected;
-//         }
-//         return cfmData.filter(function(d){
-//             return d[columnOfInterest] == valueOfInterest;
-//         })
-//     }
-// } //getFilteredDataFromSelection
 // map js
 let isMobile = $(window).width()<767 ? true : false;
 let countriesArr = [];
@@ -792,6 +387,22 @@ function getFormattedStatus(item){
     return formatedDims;
 }//getFormattedStatus
 
+function getEmergenciesTagged(item){
+    var items = getFormattedColumn(item);
+    var formattedEmergencies = "";
+    items.forEach(element => {
+        var className = "tag-";
+        if (element == "COVID-19") {
+            className += "COVID-19";
+        } else {
+            var cat = getEmergencyCategory(element);
+            cat != "Epidemics" ? className += "other" : className += cat;
+        }
+        formattedEmergencies +='<label class="alert alert-emergency '+className+'">'+element+'</label>';
+    });
+    return formattedEmergencies;
+}//getEmergenciesTagged
+
 function getDataTableData(data = filteredCfmData){
     var dt = [];
     data.forEach(element => {
@@ -801,9 +412,9 @@ function getDataTableData(data = filteredCfmData){
                 element['Organisation Name'],
                 element['Country'],
                 getFormattedStatus(element['Status']), 
+                getEmergenciesTagged(element['Emergency']),
                 element['Frequency'], 
-                element['Channels'],
-                element['Emergency'], 
+                element['Channels'], 
                 element['Link'] != '' ? '<a href="'+element['Link']+'" target="blank"><i class="fa fa-external-link"></i></a>' : null,
                 //hidden
                 element['Name'], element['Scale'], element['# Feedbacks (last 6 months)'], element['Target'],
@@ -828,10 +439,10 @@ function generateDataTable(){
                 "width": "1%"
             },
             {"width": "10%"},
-            {"width": "15%"},
+            {"width": "8%"},
+            {"width": "5%"},
             {"width": "10%"},
             {"width": "5%"},
-            {"width": "25%"},
             {"width": "15%"},
             {"width": "1%"}
         ],
@@ -851,7 +462,7 @@ function generateDataTable(){
             // { "searchable" : true, "targets": "_all"},
             // {"type": "myDate","targets": 4}
         ],
-        "pageLength": 20,
+        "pageLength": 10,
         "bLengthChange": false,
         "pagingType": "simple_numbers",
         "order":[[1, 'asc']],
@@ -905,7 +516,6 @@ function generateDataTable(){
 
 $("#exportTable").on("click", function() {
     // datatable.button( '.buttons-excel' ).trigger();
-    console.log("downloading...")
     $(".buttons-excel").trigger("click");
 });
 
@@ -916,41 +526,101 @@ function format(arr){
                     '<td>&nbsp;</td>'+
                     '<td>&nbsp;</td>'+
                     '<td>&nbsp;</td>'+
+                    '<td>&nbsp;</td>'+
+                    '<td>&nbsp;</td>'+
+                    '<td>&nbsp;</td>'+
                     '<td>'+
-                        '<table>'+
-                            '<tbody>'+
-                                '<tr>'+
-                                    '<td><strong>Name</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Name']+'</td>'+
-                                    '<td><strong>Start date</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Start date']+'</td>'+
-                                    '<td><strong># Feedback</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['# Feedbacks (last 6 months)']+'</td>'+
-                                '</tr>'+
-                                '<tr>'+
-                                    '<td><strong>Scale</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Scale']+'</td>'+
-                                    '<td><strong>National Coordination<strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['National Coordination']+'</td>'+
-                                    '<td><strong>Partners<strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Partners']+'</td>'+
-                                '</tr>'+
-                                '<tr>'+
-                                    '<td><strong>Status<s/trong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Status']+'</td>'+
-                                    '<td><strong>Interagency</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Inter-agency']+'</td>'+
-                                    '<td><strong>Keywords</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Keyword']+'</td>'+
-                                '</tr>'+
-                                '<tr>'+
-                                    '<td><strong>Target</strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Target']+'</td>'+
-                                    '<td><strong>Contact<strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Contact email']+'</td>'+
-                                    '<td><strong>Details<strong></td>'+
-                                    '<td colspan="2">'+filtered[0]['Details']+'</td>'+
-                            '</tr>'+
+                        '<table style="width:100%;">'+
+                            // '<tbody>'+
+                            // '<thead>'+
+                            //     '<tr>'+
+                            //         '<th>Details</th>'+
+                            //         '<th></th>'+
+                            //         '<th></th>'+
+                            //         '<th></th>'+
+                            //         '<th></th>'+
+                            //         '<th></th>'+
+                            //     '</tr>'+
+                            // '</thead>'+
+                                '<tbody>'+
+                                    '<tr>'+
+                                        '<td><strong>Name</strong></td>'+
+                                        '<td>'+filtered[0]['Name']+'</td>'+
+                                        '<td><strong>Start date</strong></td>'+
+                                        '<td>'+filtered[0]['Start date']+'</td>'+
+                                        '<td><strong>National Coordination</strong></td>'+
+                                        '<td>'+filtered[0]['National Coordination']+'</td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td><strong>#Feedback</strong></td>'+
+                                        '<td>'+filtered[0]['# Feedbacks (last 6 months)']+'</td>'+
+                                        '<td><strong>Scale<s/trong></td>'+
+                                        '<td>'+filtered[0]['Scale']+'</td>'+
+                                        '<td><strong>Interagency</strong></td>'+
+                                        '<td>'+filtered[0]['Inter-agency']+'</td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td><strong>Target</strong></td>'+
+                                        '<td colspan="3">'+filtered[0]['Target']+'</td>'+
+                                        '<td><strong>Partners</strong></td>'+
+                                        '<td>'+filtered[0]['Partners']+'</td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td><strong>Description</strong></td>'+
+                                        '<td colspan="3">'+filtered[0]['Details']+'</td>'+
+                                        '<td colspan="2" rowspan="2"></td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td><strong>Actions</strong></td>'+
+                                        '<td colspan="3"></td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td><strong>Keywords</strong></td>'+
+                                        '<td colspan="3">'+filtered[0]['Keyword']+'</td>'+
+                                        '<td colspan="2"></td>'+
+                                    '</tr>'+
+                                    '<tr>'+
+                                        '<td><strong>Contact</strong></td>'+
+                                        '<td>'+filtered[0]['Contact name']+'</td>'+
+                                        '<td>'+filtered[0]['Contact email']+'</td>'+
+                                        '<td></td>'+
+                                        '<td>button</td>'+
+                                        '<td></td>'+
+                                    '</tr>'+
+                                // '</tbody>'+
+                            // '</table>'+
+                            //     '<tr>'+
+                            //         '<td><strong>Name</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Name']+'</td>'+
+                            //         '<td><strong>Start date</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Start date']+'</td>'+
+                            //         '<td><strong># Feedback</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['# Feedbacks (last 6 months)']+'</td>'+
+                            //     '</tr>'+
+                            //     '<tr>'+
+                            //         '<td><strong>Scale</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Scale']+'</td>'+
+                            //         '<td><strong>National Coordination<strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['National Coordination']+'</td>'+
+                            //         '<td><strong>Partners<strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Partners']+'</td>'+
+                            //     '</tr>'+
+                            //     '<tr>'+
+                            //         '<td><strong>Status<s/trong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Status']+'</td>'+
+                            //         '<td><strong>Interagency</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Inter-agency']+'</td>'+
+                            //         '<td><strong>Keywords</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Keyword']+'</td>'+
+                            //     '</tr>'+
+                            //     '<tr>'+
+                            //         '<td><strong>Target</strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Target']+'</td>'+
+                            //         '<td><strong>Contact<strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Contact email']+'</td>'+
+                            //         '<td><strong>Details<strong></td>'+
+                            //         '<td colspan="2">'+filtered[0]['Details']+'</td>'+
+                            // '</tr>'+
                             '</tbody>'+
                         '</table>'+
                     '</td>'+
@@ -1025,7 +695,7 @@ function getFormattedColumn(item){
     var trimedArr = arr.map(x => x.trim());
     for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
         if (trimedArr[index]) {
-            items.push(trimedArr[index])
+            items.push(trimedArr[index]);
         }
     }
     return items;
@@ -1037,9 +707,6 @@ for (var i = 0; i < buttonsTags.length; i++) {
 }
 
 var buttonsEmergency = document.getElementsByClassName("emergency");
-for (var i = 0; i < buttonsEmergency.length; i++) {
-    buttonsEmergency[i].addEventListener('click', emergencyFilterclick);   
-}
 
 function findOneEmergency(emergenciesArrTest, arr) {
     return arr.some(function (v) {
@@ -1074,14 +741,16 @@ function applyAllFilters(){
         data = data.filter(function(d){ return d['Organisation Name'] == org; });
     }
     if(emergencyFilter != "all"){
-        if(emergenciesArr.includes(emergencyFilter)){
+        if(emergencyFilter == "COVID-19"){
             data = data.filter(function(d){ 
                 var arr = getFormattedColumn(d['Emergency']);
                 return arr.includes(emergencyFilter) ;}) ;
         }else {
-            data = data.filter(function(d){ 
+            var emergencies = getSubValues(emergencyFilter, emergencyData);
+            data = data.filter(function(d){
                 var arr = getFormattedColumn(d['Emergency']);
-                return !findOneEmergency(emergenciesArr, arr); }) ;
+                return findOneEmergency(emergencies, arr);
+            })
         }
     }
     return data;
@@ -1107,37 +776,12 @@ function statusFilterClick(){
 
 $('#orgSelect').on('change', function(d){
     var filter = applyAllFilters();
-    // var statusTag = "all", 
-    // emergencyFilter = "all";
-    // var dt;
-    // for (var i = 0; i < buttonsTags.length; i++) {
-    //     if ($(buttonsTags[i]).hasClass('active')) {
-    //         statusTag = $(buttonsTags[i]).val();
-    //     }
-    // }
-    // for (var i = 0; i < buttonsEmergency.length; i++) {
-    //     if ($(buttonsEmergency[i]).hasClass('active')) {
-    //         emergencyFilter = $(buttonsEmergency[i]).val();
-    //     }
-    // }
-    // if(statusTag != "all" || emergencyFilter != "all"){
-    //     console.log("you should filter tags first")
-    //     dt = getFilteredDataFromTags();
-    // }
-    // var filter = getFilteredDataFromTags();
-
-    // var all_filtersData = getFilteredDataFromDropdown(filter);
     updateDataTable(filter);
-    // to update only if region is filtered
     updatePane(filter);
 });
 
 $('#regionSelect').on('change', function(e){
     var filter = applyAllFilters();
-    // var filter = getFilteredDataFromTags();
-    // var all_filtersData = getFilteredDataFromDropdown(filter);
-    // generateOrgDropdown(all_filtersData);
-    
     updateDataTable(filter);
     updatePane(filter);
   });
@@ -1160,24 +804,27 @@ $('#reset-table').on('click', function(){
 //v1.0 
 let geodataUrl = 'data/wld.json';
 let cfmDataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbPRrmlDfV3WzI-5QizI2ig2AoJo84KS7pSQtXkUiV5BD3s4uxpXqW8rK2sHmNjP2yCavO1XasLyCe/pub?gid=126026288&single=true&output=csv';
-
+let emergencyURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbPRrmlDfV3WzI-5QizI2ig2AoJo84KS7pSQtXkUiV5BD3s4uxpXqW8rK2sHmNjP2yCavO1XasLyCe/pub?gid=1569772209&single=true&output=csv';
 let geomData,
     cfmData,
-    filteredCfmData;
-
+    filteredCfmData,
+    emergencyData;
 
 $( document ).ready(function(){
     function getData(){
         Promise.all([
             d3.json(geodataUrl),
-            d3.csv(cfmDataUrl)
+            d3.csv(cfmDataUrl),
+            d3.csv(emergencyURL)
         ]).then(function(data){
             geomData = topojson.feature(data[0], data[0].objects.worldtopo12022020);
             var id = 0;
-            data[1].forEach(element => {
-                element['id'] = id + 1;
-                id = id + 1 +Math.floor(Math.random() * 10);
-            });
+            // data[1].forEach(element => {
+            //     element['id'] = id + 1;
+            //     id = id + 1 +Math.floor(Math.random() * 10);
+            //     // console.log(element['Channels']);
+            //     clearnChannels(element['Channels']);
+            // });
             cfmData = data[1];
             filteredCfmData = data[1];
             var colUniqueValues = getColumnUniqueValues('Country', 'ISO3', 'Region', 'Organisation Name');
@@ -1185,6 +832,16 @@ $( document ).ready(function(){
             countriesISO3Arr = colUniqueValues[1],
             regionsArr.push(...colUniqueValues[2]),
             organisationsArr.push(...colUniqueValues[3]);
+            //Emergency processing
+            emergencyData = d3.nest()
+                    .key(function(d){ return d['Category'];})
+                    .key(function(d){ return d['Emergencies'];})
+                    .rollup(function(v){ return d3.sum(v, function(d){ return d.lenght; })})
+                    .entries(data[2]);
+            emergencyData.forEach(element => {
+                element.key != "Other" ? emergenciesArr.push(element.key): null;
+            });
+            emergenciesArr.push("Other");
             // var arrEmerg = colUniqueValues[4];
             // arrEmerg.forEach(item => {
             //     var arr = item.split(",");
@@ -1200,7 +857,7 @@ $( document ).ready(function(){
             //     });
             // });
             // console.log(emergenciesArr)
-
+            generateEmergencyTags();
             generateDefaultDetailPane();
             generateRegionDropdown();
             generateOrgDropdown();

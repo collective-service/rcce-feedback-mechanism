@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/jquery.dataTables.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/39e5643f1a.js"></script>
-    <script src="https://d3js.org/d3.v5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://d3js.org/d3.v5.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
@@ -79,11 +78,10 @@
                 </span>
                 <span class="emergencyFilter">
                     <label><strong>Filter by emergency: </strong></label>
-                    <label><button type="button" class="btn btn-secondary emergency" id="covid" value="COVID-19">COVID-19</button></label>
-                    <!-- <label><button type="button" class="btn btn-secondary filter" id="cholera" value="Cholera">Cholera</button></label> -->
-                    <label><button type="button" class="btn btn-secondary emergency" id="ebola" value="Ebola">Ebola</button></label>
-                    <label><button type="button" class="btn btn-secondary emergency" id="dengue" value="Dengue">Dengue</button></label>
-                    <label><button type="button" class="btn btn-secondary emergency" id="otherOutbreak" value="emergency-other">Other</button></label>
+                    <!-- <label><button type="button" class="btn btn-secondary emergency" id="covid" value="COVID-19">COVID-19</button></label> -->
+                    <!-- <label><button type="button" class="btn btn-secondary emergency" id="ebola" value="Ebola">Ebola</button></label> -->
+                    <!-- <label><button type="button" class="btn btn-secondary emergency" id="dengue" value="Dengue">Dengue</button></label> -->
+                    <!-- <label><button type="button" class="btn btn-secondary emergency" id="otherOutbreak" value="emergency-other">Other</button></label> -->
                 </span>
                 <span class="dropdownSelect">
                     <select name="regionSelect" id="regionSelect"></select>
@@ -102,7 +100,7 @@
                 <!-- </span> -->
             </div>
         </section>
-        <section>
+        <section class="fixWidth">
             <table id="datatable" class="row-border" style="width:100%">
                 <thead>
                 <tr>
@@ -110,15 +108,24 @@
                     <th>Organisation</th>
                     <th>Country</th>
                     <th>Status</th>
+                    <th>Emergency</th>
                     <th>Frequence</th>
                     <th>Channels</th>
-                    <th>Emergency</th>
                     <th>Link</th>
                     <th></th><th></th>
                 </tr>
                 </thead>
             </table>
         </section>
+        <!-- <section>
+            <div class="footer">
+                <h2>Test fix width</h2>
+                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
+                    Nam quidem tempora architecto laudantium. Quod, laboriosam? Suscipit 
+                    eveniet, error, harum labore similique maiores eum dolorum eos ullam nulla iure, earum commodi!
+                </p>
+            </div>
+        </section> -->
     </div>
     <script type='text/javascript' src='js/bundle.js'></script>
 </body>

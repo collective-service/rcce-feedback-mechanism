@@ -17,7 +17,7 @@ function choroplethMap(){
 
 function generateDefaultDetailPane(){
     var orgNums = organisationsArr.length - 1;
-    $('.details > h6').text('global overwiew');
+    $('.details > h6').text('global overview');
     $('#globalStats').html('');
     $('#globalStats')
         .append(
@@ -184,9 +184,9 @@ let currentZoom = 1;
 let mapClicked = false;
 let selectedCountryFromMap = "all";
 let countrySelectedFromMap = false;
-let mapFillColor = '#D90368',//'#C2DACA',//'#2F9C67', 
+let mapFillColor = '#204669',//'#C2DACA',//'#2F9C67', 
     mapInactive = '#fff',//'#DBDEE6',//'#f1f1ee',//'#C2C4C6',
-    mapActive = '#E996AD',
+    mapActive = '#D90368',
     hoverColor = '#E996AD';//'#78B794';
 
 function initiateMap() {
@@ -199,7 +199,7 @@ function initiateMap() {
     projection = d3.geoMercator()
         .center(mapCenter)
         .scale(mapScale)
-        .translate([width / 3.0, height / 1.9]);
+        .translate([width / 3.2, height / 1.9]);
 
     path = d3.geoPath().projection(projection);
 
@@ -499,8 +499,8 @@ function generateDataTable(){
             row.child.hide();
             tr.removeClass('shown');
             tr.css('background-color', '#fff');
-            tr.find('td.details-control i').removeClass('fa-minus-circle');
-            tr.find('td.details-control i').addClass('fa-plus-circle');
+            tr.find('td.details-control i').removeClass('fa-caret-right');
+            tr.find('td.details-control i').addClass('fa-caret-down');
         }
         else {
             row.child(format(row.data())).show();
@@ -509,8 +509,8 @@ function generateDataTable(){
             $('#cfmDetails').parent('td').css('border-top', 0);
             $('#cfmDetails').parent('td').css('padding', 0);
             $('#cfmDetails').parent('td').css('background-color', '#f5f5f5');
-            tr.find('td.details-control i').removeClass('fa-plus-circle');
-            tr.find('td.details-control i').addClass('fa-minus-circle');
+            tr.find('td.details-control i').removeClass('fa-caret-right');
+            tr.find('td.details-control i').addClass('fa-caret-down');
     
         }
     });

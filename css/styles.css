@@ -1078,7 +1078,7 @@ body {
   opacity: 0; }
 
 .sur-couche {
-  right: 0px;
+  right: 10px;
   position: absolute;
   top: 0px;
   z-index: 2; }

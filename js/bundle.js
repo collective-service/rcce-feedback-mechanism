@@ -219,7 +219,7 @@ function initiateMap() {
         .attr("width", "100%")
         .attr("height", "100%")
         // .attr("fill", "#99daea");
-        .attr("fill", "#efebe7");
+        .attr("fill", "#e7e7e7");
 
     //map tooltips
     var maptip = d3.select('#map').append('div').attr('class', 'd3-tip map-tip hidden');
@@ -240,8 +240,8 @@ function initiateMap() {
             .attr('fill', function(d){
               return countriesISO3Arr.includes(d.properties.ISO_A3) ? mapFillColor : mapInactive ;
             })
-            .attr('stroke-width', .1)
-            .attr('stroke', '#7b6a58');
+            .attr('stroke-width', .05)
+            .attr('stroke', '#dcdcdc');
 
     mapsvg.transition()
     .duration(750)

@@ -396,9 +396,13 @@ function getEmergenciesTagged(item){
         var className = "tag-";
         if (element == "COVID-19") {
             className += "COVID-19";
-        } else {
+        }  elseif (element == "Epidemics") {
+            className += "Epidemics";
+        } 
+        
+        else {
             var cat = getEmergencyCategory(element);
-            cat != "Epidemics" ? className += "other" : className += cat;
+            cat != "Disaster" ? className += "other" : className += cat;
         }
         formattedEmergencies +='<label class="alert alert-emergency '+className+'">'+element+'</label>';
     });

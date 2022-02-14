@@ -1393,19 +1393,23 @@ a {
   border-color: #cdc8c3; }
 
 .tag-active {
-  width:50px;
+  width:80px;
+  text-align:center;
   background-color: #2f9c67; }
 
 .tag-development {
-  width:50px;
+  width:80px;
+  text-align:center;
   background-color: #9ec8ae; }
 
 .tag-inactive {
-  width:50px;
+  width:80px;
+  text-align:center;
   background-color: #798ba5; }
 
 .tag-closed {
-  width:50px;
+  width:80px;
+  text-align:center;
   background-color: #a6b0c3; }
 
 .footer {

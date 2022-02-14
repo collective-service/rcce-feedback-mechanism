@@ -442,10 +442,10 @@ function generateDataTable(){
             },
             {"width": "10%"},
             {"width": "8%"},
-            {"width": "4%"},
-            {"width": "8%"},
+            {"width": "3%"},
+            {"width": "10%"},
             {"width": "5%"},
-            {"width": "18%"},
+            {"width": "15%"},
             {"width": "1%"}
         ],
         "columnDefs": [

@@ -1,7 +1,7 @@
 // window.$ = window.jQuery = require('jquery');
 let numberCountriesCFM = 0;
 let regionsArr = ['All regions'],
-    organisationsArr = ['All organizations'];
+    organisationsArr = [];
 let countriesISO3Arr = [];
 let emergenciesArr = [];
 
@@ -92,7 +92,7 @@ function generateRegionDropdown(){
 
 // generate or update the organisation dropdown select
 function generateOrgDropdown(data){
-    var orgArr = ['All organizations'];
+    var orgArr = [];
     if(data != undefined) {  
         data.forEach(element => {
             orgArr.includes(element['Organisation Name']) ? '' : orgArr.push(element['Organisation Name']);
@@ -100,6 +100,8 @@ function generateOrgDropdown(data){
     } else {
         orgArr = organisationsArr;
     }
+    orgArr.sort();
+    orgArr.unshift("All organisations");
     $('#orgSelect').html('');
     var options = "";
     for (let index = 0; index < orgArr.length; index++) {
@@ -717,7 +719,7 @@ function findOneEmergency(emergenciesArrTest, arr) {
 };
 
 function applyAllFilters(){
-    var statusTag = "all", 
+    var statusTag = $('#statusSelect').val();
     emergencyFilter = "all";
     var org = $('#orgSelect').val();
     var region = $('#regionSelect').val();
@@ -776,6 +778,12 @@ function statusFilterClick(){
     updatePane(filter);
 }//statusFilterClick
 
+$('#statusSelect').on('change', function(d){
+    var filter = applyAllFilters();
+    updateDataTable(filter);
+    updatePane(filter);
+});
+
 $('#orgSelect').on('change', function(d){
     var filter = applyAllFilters();
     updateDataTable(filter);
@@ -824,8 +832,6 @@ $( document ).ready(function(){
             data[1].forEach(element => {
                 element['id'] = id + 1;
                 id = id + 1 +Math.floor(Math.random() * 10);
-                // console.log(element['Channels']);
-                // clearnChannels(element['Channels']);
             });
             cfmData = data[1];
             filteredCfmData = data[1];
@@ -843,21 +849,7 @@ $( document ).ready(function(){
             emergencyData.forEach(element => {
                 emergenciesArr.push(element.key);
             });
-            // var arrEmerg = colUniqueValues[4];
-            // arrEmerg.forEach(item => {
-            //     var arr = item.split(",");
-            //     var trimedArr = arr.map(x => x.trim());
-            //     var items = [];
-            //     for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
-            //         if (trimedArr[index]) {
-            //             items.push(trimedArr[index])
-            //         }
-            //     }
-            //     items.forEach(element => {
-            //         emergenciesArr.includes(element) ? '' : emergenciesArr.push(element);
-            //     });
-            // });
-            // console.log(emergenciesArr)
+
             generateEmergencyTags();
             generateDefaultDetailPane();
             generateRegionDropdown();

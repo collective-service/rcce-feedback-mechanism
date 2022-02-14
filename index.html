@@ -68,21 +68,20 @@
                 <!-- <span class="dtSearch">
                     <label id="searchBox"><input class="form-control" id="searchInput" type="text" placeholder="Search.."></label>
                 </span> -->
-                <span class="statusFilter">
-                    <label><strong>Filter by status: </strong></label>
-                        <!-- <label><button type="button" class="btn tag-all   filter" id="all" value="all">All</button></label> -->
-                        <label><button type="button" class="btn tag-main  filter" id="active" value="Active">Active</button></label>
-                        <label><button type="button" class="btn tag-main  filter" id="development" value="Development">Development</button></label>
-                        <label><button type="button" class="btn tag-main  filter" id="inactive" value="Inactive">Inactive</button></label>
-                        <label><button type="button" class="btn tag-main  filter" id="closed" value="Closed">Closed</button></label>
-                </span>
                 <span class="emergencyFilter">
                     <label><strong>Filter by emergency: </strong></label>
-                    <!-- <label><button type="button" class="btn btn-secondary emergency" id="covid" value="COVID-19">COVID-19</button></label> -->
-                    <!-- <label><button type="button" class="btn btn-secondary emergency" id="ebola" value="Ebola">Ebola</button></label> -->
-                    <!-- <label><button type="button" class="btn btn-secondary emergency" id="dengue" value="Dengue">Dengue</button></label> -->
-                    <!-- <label><button type="button" class="btn btn-secondary emergency" id="otherOutbreak" value="emergency-other">Other</button></label> -->
                 </span>
+                <span class="statusFilter dropdownSelect">
+                    <!-- <label><strong>Filter by status: </strong></label> -->
+                    <select name="statusSelect" id="statusSelect">
+                        <option value="all">Select Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Development">Development</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </span>
+
                 <span class="dropdownSelect">
                     <select name="regionSelect" id="regionSelect"></select>
                 </span>

@@ -187,7 +187,7 @@ let countrySelectedFromMap = false;
 let mapFillColor = '#204669',//'#C2DACA',//'#2F9C67', 
     mapInactive = '#fff',//'#DBDEE6',//'#f1f1ee',//'#C2C4C6',
     mapActive = '#D90368',
-    hoverColor = '#E996AD';//'#78B794';
+    hoverColor = '#D90368';//'#78B794';
 
 function initiateMap() {
     width = viewportWidth;

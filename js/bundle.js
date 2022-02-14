@@ -442,8 +442,8 @@ function generateDataTable(){
             },
             {"width": "10%"},
             {"width": "8%"},
-            {"width": "3%"},
-            {"width": "10%"},
+            {"width": "2%"},
+            {"width": "11%"},
             {"width": "5%"},
             {"width": "15%"},
             {"width": "1%"}

@@ -184,10 +184,10 @@ let currentZoom = 1;
 let mapClicked = false;
 let selectedCountryFromMap = "all";
 let countrySelectedFromMap = false;
-let mapFillColor = '#2F9C67',//'#C2DACA',//'#2F9C67', 
+let mapFillColor = '#D90368',//'#C2DACA',//'#2F9C67', 
     mapInactive = '#fff',//'#DBDEE6',//'#f1f1ee',//'#C2C4C6',
-    mapActive = '#D90368',
-    hoverColor = '#E27093';//'#78B794';
+    mapActive = '#E996AD',
+    hoverColor = '#E996AD';//'#78B794';
 
 function initiateMap() {
     width = viewportWidth;
@@ -199,7 +199,7 @@ function initiateMap() {
     projection = d3.geoMercator()
         .center(mapCenter)
         .scale(mapScale)
-        .translate([width / 2.9, height / 1.9]);
+        .translate([width / 3.0, height / 1.9]);
 
     path = d3.geoPath().projection(projection);
 
@@ -219,7 +219,7 @@ function initiateMap() {
         .attr("width", "100%")
         .attr("height", "100%")
         // .attr("fill", "#99daea");
-        .attr("fill", "#e7e7e7");
+        .attr("fill", "#d9d9d9");
 
     //map tooltips
     var maptip = d3.select('#map').append('div').attr('class', 'd3-tip map-tip hidden');
@@ -240,8 +240,8 @@ function initiateMap() {
             .attr('fill', function(d){
               return countriesISO3Arr.includes(d.properties.ISO_A3) ? mapFillColor : mapInactive ;
             })
-            .attr('stroke-width', .05)
-            .attr('stroke', '#dcdcdc');
+            .attr('stroke-width', .2)
+            .attr('stroke', '#d9d9d9');
 
     mapsvg.transition()
     .duration(750)

@@ -149,7 +149,9 @@ $("#exportTable").on("click", function() {
 });
 
 function format(arr){
+    console.log(arr)
     filtered = cfmData.filter(function(d){ return d['id']==arr[0]; });
+    console.log(filtered)
     return '<table class="tabDetail" id="cfmDetails" >'+
                 '<tr>'+
                     '<td>&nbsp;</td>'+

@@ -16,12 +16,12 @@ $( document ).ready(function(){
         ]).then(function(data){
             geomData = topojson.feature(data[0], data[0].objects.worldtopo12022020);
             var id = 0;
-            // data[1].forEach(element => {
-            //     element['id'] = id + 1;
-            //     id = id + 1 +Math.floor(Math.random() * 10);
-            //     // console.log(element['Channels']);
-            //     clearnChannels(element['Channels']);
-            // });
+            data[1].forEach(element => {
+                element['id'] = id + 1;
+                id = id + 1 +Math.floor(Math.random() * 10);
+                // console.log(element['Channels']);
+                // clearnChannels(element['Channels']);
+            });
             cfmData = data[1];
             filteredCfmData = data[1];
             var colUniqueValues = getColumnUniqueValues('Country', 'ISO3', 'Region', 'Organisation Name');
@@ -36,9 +36,8 @@ $( document ).ready(function(){
                     .rollup(function(v){ return d3.sum(v, function(d){ return d.lenght; })})
                     .entries(data[2]);
             emergencyData.forEach(element => {
-                element.key != "Other" ? emergenciesArr.push(element.key): null;
+                emergenciesArr.push(element.key);
             });
-            emergenciesArr.push("Other");
             // var arrEmerg = colUniqueValues[4];
             // arrEmerg.forEach(item => {
             //     var arr = item.split(",");

@@ -162,17 +162,6 @@ function format(arr){
                     '<td>&nbsp;</td>'+
                     '<td>'+
                         '<table style="width:100%;">'+
-                            // '<tbody>'+
-                            // '<thead>'+
-                            //     '<tr>'+
-                            //         '<th>Details</th>'+
-                            //         '<th></th>'+
-                            //         '<th></th>'+
-                            //         '<th></th>'+
-                            //         '<th></th>'+
-                            //         '<th></th>'+
-                            //     '</tr>'+
-                            // '</thead>'+
                                 '<tbody>'+
                                     '<tr>'+
                                         '<td><strong>Name</strong></td>'+
@@ -203,7 +192,7 @@ function format(arr){
                                     '</tr>'+
                                     '<tr>'+
                                         '<td><strong>Actions</strong></td>'+
-                                        '<td colspan="3"></td>'+
+                                        '<td colspan="3">'+filtered[0]['Usage']+'</td>'+
                                     '</tr>'+
                                     '<tr>'+
                                         '<td><strong>Keywords</strong></td>'+
@@ -215,43 +204,9 @@ function format(arr){
                                         '<td>'+filtered[0]['Contact name']+'</td>'+
                                         '<td>'+filtered[0]['Contact email']+'</td>'+
                                         '<td></td>'+
-                                        '<td>button</td>'+
+                                        '<td><a href="'+filtered[0]['Link']+'" target="_blank"><input type="button" class="btn btn-info" value="Visit link"></a></td>'+
                                         '<td></td>'+
                                     '</tr>'+
-                                // '</tbody>'+
-                            // '</table>'+
-                            //     '<tr>'+
-                            //         '<td><strong>Name</strong></td>'+
-                            //         '<td colspan="2">'+filtered[0]['Name']+'</td>'+
-                            //         '<td><strong>Start date</strong></td>'+
-                            //         '<td colspan="2">'+filtered[0]['Start date']+'</td>'+
-                            //         '<td><strong># Feedback</strong></td>'+
-                            //         '<td colspan="2">'+filtered[0]['# Feedbacks (last 6 months)']+'</td>'+
-                            //     '</tr>'+
-                            //     '<tr>'+
-                            //         '<td><strong>Scale</strong></td>'+
-                            //         '<td colspan="2">'+filtered[0]['Scale']+'</td>'+
-                            //         '<td><strong>National Coordination<strong></td>'+
-                            //         '<td colspan="2">'+filtered[0]['National Coordination']+'</td>'+
-                            //         '<td><strong>Partners<strong></td>'+
-                            //         '<td colspan="2">'+filtered[0]['Partners']+'</td>'+
-                            //     '</tr>'+
-                            //     '<tr>'+
-                            //         '<td><strong>Status<s/trong></td>'+
-                            //         '<td colspan="2">'+filtered[0]['Status']+'</td>'+
-                            //         '<td><strong>Interagency</strong></td>'+
-                            //         '<td colspan="2">'+filtered[0]['Inter-agency']+'</td>'+
-                            //         '<td><strong>Keywords</strong></td>'+
-                            //         '<td colspan="2">'+filtered[0]['Keyword']+'</td>'+
-                            //     '</tr>'+
-                            //     '<tr>'+
-                            //         '<td><strong>Target</strong></td>'+
-                            //         '<td colspan="2">'+filtered[0]['Target']+'</td>'+
-                            //         '<td><strong>Contact<strong></td>'+
-                            //         '<td colspan="2">'+filtered[0]['Contact email']+'</td>'+
-                            //         '<td><strong>Details<strong></td>'+
-                            //         '<td colspan="2">'+filtered[0]['Details']+'</td>'+
-                            // '</tr>'+
                             '</tbody>'+
                         '</table>'+
                     '</td>'+

@@ -1078,14 +1078,15 @@ body {
   opacity: 0; }
 
 .sur-couche {
-  right: 45px;
+  right: 10px;
   position: absolute;
-  top: 45px;
+  top: 10px;
   z-index: 2; }
 
 .details {
   font-family: "Montserrat", Helvetica, Arial, Lucida, sans-serif;
-  background-color: #efebe7;
+  background-color: #d9d9d9;
+  height:500px;
   color: #fff;
   padding: 10px;
   width: 570px; }

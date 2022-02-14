@@ -1219,7 +1219,7 @@ h2 {
   display: inline;
   padding-top: 10px; }
   .purpose h6 span {
-    font-weight: bold; }
+  font-weight: bold; }
 
 .btn-tertiary {
   float: right;
@@ -1233,23 +1233,40 @@ h2 {
 #datatable {
   padding-top: 10px; }
 
+table.dataTable {
+    margin-top:25px;
+  }
+
+table.dataTable tbody tr {
+    vertical-align: top;
+    padding-top:5px;
+    font-size: 0.83rem;
+  }
+  
 #datatable.dataTable td {
-  font-size: 0.85rem;
-  line-height: 1.5; }
+  vertical-align: top;
+  font-size: 0.83rem;
+  line-height: 1.5; 
+  }
+  
   #datatable.dataTable td .Active {
-    color: "#2F9C67"; }
+    color: "#2F9C67"; 
+    }
   #datatable.dataTable td .Inactive {
-    color: "#E9F1EA"; }
+    color: "#E9F1EA"; 
+    }
   #datatable.dataTable td .Pipeline {
-    color: "#9EC8AE"; }
+    color: "#9EC8AE"; 
+    }
 
 table.dataTable thead th,
 table.dataTable thead td {
-  font-family: "Gotham-Bold", sans-serif;
-  font-size: 0.85rem;
+  vertical-align: top;
+  font-size: 0.83rem;
   line-height: 1.5;
   padding: 5px 10px;
-  border-bottom: 1px solid #111; }
+  border-bottom: 1px solid #ccc;
+  text-transform: uppercase; }
 
 .fa-download {
   color: #000;
@@ -1326,6 +1343,18 @@ a {
 
 .tag-purpose-other {
   background-color: #dbdee6; }
+
+  .fa-caret-down {
+    color: #A6B0C3;
+    font-size: 1.3rem;
+    margin-top-5px;
+    line-height: 1.5; }
+  
+  .fa-caret-right {
+    color: #A6B0C3;
+    font-size: 1.3rem;
+    margin-top-5px;
+    line-height: 1.5; }
 
 .footer {
   padding-top: 10px;

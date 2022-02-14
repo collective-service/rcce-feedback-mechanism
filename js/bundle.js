@@ -199,7 +199,7 @@ function initiateMap() {
     projection = d3.geoMercator()
         .center(mapCenter)
         .scale(mapScale)
-        .translate([width / 3.2, height / 1.9]);
+        .translate([width / 3.0, height / 1.9]);
 
     path = d3.geoPath().projection(projection);
 

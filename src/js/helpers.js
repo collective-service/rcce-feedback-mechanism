@@ -36,7 +36,7 @@ function generateRegionDropdown(){
 
 // generate or update the organisation dropdown select
 function generateOrgDropdown(data){
-    var orgArr = ['All organizations'];
+    var orgArr = [];
     if(data != undefined) {  
         data.forEach(element => {
             orgArr.includes(element['Organisation Name']) ? '' : orgArr.push(element['Organisation Name']);
@@ -44,6 +44,8 @@ function generateOrgDropdown(data){
     } else {
         orgArr = organisationsArr;
     }
+    orgArr.sort();
+    orgArr.unshift("All organisations");
     $('#orgSelect').html('');
     var options = "";
     for (let index = 0; index < orgArr.length; index++) {

@@ -19,8 +19,6 @@ $( document ).ready(function(){
             data[1].forEach(element => {
                 element['id'] = id + 1;
                 id = id + 1 +Math.floor(Math.random() * 10);
-                // console.log(element['Channels']);
-                // clearnChannels(element['Channels']);
             });
             cfmData = data[1];
             filteredCfmData = data[1];
@@ -38,21 +36,7 @@ $( document ).ready(function(){
             emergencyData.forEach(element => {
                 emergenciesArr.push(element.key);
             });
-            // var arrEmerg = colUniqueValues[4];
-            // arrEmerg.forEach(item => {
-            //     var arr = item.split(",");
-            //     var trimedArr = arr.map(x => x.trim());
-            //     var items = [];
-            //     for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
-            //         if (trimedArr[index]) {
-            //             items.push(trimedArr[index])
-            //         }
-            //     }
-            //     items.forEach(element => {
-            //         emergenciesArr.includes(element) ? '' : emergenciesArr.push(element);
-            //     });
-            // });
-            // console.log(emergenciesArr)
+
             generateEmergencyTags();
             generateDefaultDetailPane();
             generateRegionDropdown();

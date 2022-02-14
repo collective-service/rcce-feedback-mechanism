@@ -1,6 +1,6 @@
 let numberCountriesCFM = 0;
 let regionsArr = ['All regions'],
-    organisationsArr = ['All organizations'];
+    organisationsArr = [];
 let countriesISO3Arr = [];
 let emergenciesArr = [];
 

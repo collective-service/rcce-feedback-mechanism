@@ -346,7 +346,7 @@ function findOneEmergency(emergenciesArrTest, arr) {
 };
 
 function applyAllFilters(){
-    var statusTag = "all", 
+    var statusTag = $('#statusSelect').val();
     emergencyFilter = "all";
     var org = $('#orgSelect').val();
     var region = $('#regionSelect').val();
@@ -404,6 +404,12 @@ function statusFilterClick(){
     updateDataTable(filter);
     updatePane(filter);
 }//statusFilterClick
+
+$('#statusSelect').on('change', function(d){
+    var filter = applyAllFilters();
+    updateDataTable(filter);
+    updatePane(filter);
+});
 
 $('#orgSelect').on('change', function(d){
     var filter = applyAllFilters();

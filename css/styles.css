@@ -1142,6 +1142,7 @@ body {
       line-height: 1;
       min-height: 40px;
       color: #204669; }
+#submission {display:block; text-align:center;}
 
 #map {
   width: 100%;

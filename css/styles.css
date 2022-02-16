@@ -1138,7 +1138,7 @@ body {
 /* .media {display:none;} */
 
 #submission {display:block; text-align:center; margin-bottom:10px}
-#submission #datatable .btn-info {
+.details, #submission, #datatable .btn-info {
     margin: 10px 0 10px 0;
     color: #ffffff !important;
     border-color: rgba(0, 0, 0, 0);

@@ -1419,6 +1419,11 @@ a {
   font-size: 1.1rem;
   line-height: 1.5; }
 
+i.icon-check:before {
+    position: absolute;
+    top: -4px;
+}
+
   .fa-caret-down {
     color: #A6B0C3;
     font-size: 1.3rem;

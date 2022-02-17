@@ -119,7 +119,7 @@ function generateEmergencyTags(){
     var labels = "";
     for (let index = 0; index < emergenciesArr.length; index++) {
         const element = emergenciesArr[index];
-        const idy = (['COVID-19', 'Epidemics'].includes(element) ? element : "other")
+        const idy = getEmergencyID(element);//(['COVID-19', 'Epidemics'].includes(element) ? element : "other")
         labels +='<label><button type="button" class="btn btn-secondary emergency" id="'+idy+'" value="'+element+'">'+element+'</button></label>';
     }
     $('.emergencyFilter').append(labels);
@@ -160,6 +160,14 @@ function getEmergencyCategory(lookUp){
     });
     return emer;
 }//getEmergencyCategory
+
+function getEmergencyID(emergency){
+    var id;
+    emergencyID.forEach(element => {
+        element.key == emergency? id = element.values[0].key : null;
+    });
+    return id;
+}//getEmergencyID 
 
 function clearnChannels(channel){
     channel = channel.replace(",", "")
@@ -393,13 +401,8 @@ function getEmergenciesTagged(item){
     var items = getFormattedColumn(item);
     var formattedEmergencies = "";
     items.forEach(element => {
-        var className = "tag-";
-        if (element == "COVID-19") {
-            className += "COVID-19";
-        } else {
-            var cat = getEmergencyCategory(element);
-            cat != "Epidemics" ? className += "other" : className += cat;
-        }
+        var id = getEmergencyID(getEmergencyCategory(element));
+        var className = "tag-" + id;
         formattedEmergencies +='<label class="alert alert-emergency '+className+'">'+element+'</label>';
     });
     return formattedEmergencies;
@@ -509,8 +512,8 @@ function generateDataTable(){
             $('#cfmDetails').parent('td').css('border-top', 0);
             $('#cfmDetails').parent('td').css('padding', 0);
             $('#cfmDetails').parent('td').css('background-color', '#f5f5f5');
-            tr.find('td.details-control i').removeClass('fa-caret-right');
-            tr.find('td.details-control i').addClass('fa-caret-down');
+            tr.find('td.details-control i').removeClass('fa-caret-down');
+            tr.find('td.details-control i').addClass('fa-caret-right');
     
         }
     });
@@ -522,7 +525,6 @@ $("#exportTable").on("click", function() {
 });
 
 function format(arr){
-    console.log(arr)
     filtered = cfmData.filter(function(d){ return d['id']==arr[0]; });
     var buttonLink = "";
     if (filtered[0]['Link'] != ""){
@@ -786,7 +788,8 @@ let emergencyURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbPRrmlDfV3
 let geomData,
     cfmData,
     filteredCfmData,
-    emergencyData;
+    emergencyData,
+    emergencyID;
 
 $( document ).ready(function(){
     function getData(){
@@ -817,6 +820,11 @@ $( document ).ready(function(){
             emergencyData.forEach(element => {
                 emergenciesArr.push(element.key);
             });
+            emergencyID = d3.nest()
+                .key(function(d){ return d['Category'];})
+                .key(function(d){ return d['ID'];})
+                .rollup(function(v){ return d3.sum(v, function(d){ return d.lenght; })})
+                .entries(data[2]);
 
             generateEmergencyTags();
             generateDefaultDetailPane();

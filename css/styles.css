@@ -302,9 +302,12 @@ a {
   .emergencyFilter #Conflict {
     background-color: #a49585;
     border-color: #a49585; }
+.emergencyFilter #Programme {
+    background-color: #798BA5;
+    border-color: #798BA5; }
 .emergencyFilter #Other {
-    background-color: #a49585;
-    border-color: #a49585; }
+    background-color: #C2C4C6;
+    border-color: #C2C4C6; }
 
 .statusFilter #active {
   background-color: #2f9c67;
@@ -360,9 +363,13 @@ a {
   background-color: #a49585;
   border-color: #a49585; }
 
+.tag-Programme {
+  background-color: #798BA5;
+  border-color: #798BA5; }
+
 .tag-Other {
-  background-color: #cdc8c3;
-  border-color: #cdc8c3; }
+  background-color: #C2C4C6;
+  border-color: #C2C4C6; }
 
 .tag-active {
   background-color: #2f9c67; }

@@ -306,8 +306,8 @@ a {
     background-color: #798BA5;
     border-color: #798BA5; }
 .emergencyFilter #Other {
-    background-color: #C2C4C6;
-    border-color: #C2C4C6; }
+    background-color: #A6B0C3;
+    border-color: #A6B0C3; }
 
 .statusFilter #active {
   background-color: #2f9c67;
@@ -318,12 +318,12 @@ a {
   border-color: #9ec8ae; }
 
 .statusFilter #inactive {
-  background-color: #798ba5;
-  border-color: #798ba5; }
+  background-color: #9D9FA2;
+  border-color: #9D9FA2; }
 
 .statusFilter #closed {
-  background-color: #a6b0c3;
-  border-color: #a6b0c3; }
+  background-color: #C2C4C6;
+  border-color: #C2C4C6; }
 
 .statusFilter .btn {
   outline: none;
@@ -368,8 +368,8 @@ a {
   border-color: #798BA5; }
 
 .tag-Other {
-  background-color: #C2C4C6;
-  border-color: #C2C4C6; }
+  background-color: #A6B0C3;
+  border-color: #A6B0C3; }
 
 .tag-active {
   background-color: #2f9c67; }

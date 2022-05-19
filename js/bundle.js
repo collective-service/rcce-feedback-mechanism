@@ -782,7 +782,7 @@ $('#reset-table').on('click', function(){
     // }
 });
 //v1.0 
-let geodataUrl = 'data/wld.json';
+let geodataUrl = 'data/wld052022.json';
 let cfmDataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbPRrmlDfV3WzI-5QizI2ig2AoJo84KS7pSQtXkUiV5BD3s4uxpXqW8rK2sHmNjP2yCavO1XasLyCe/pub?gid=126026288&single=true&output=csv';
 let emergencyURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbPRrmlDfV3WzI-5QizI2ig2AoJo84KS7pSQtXkUiV5BD3s4uxpXqW8rK2sHmNjP2yCavO1XasLyCe/pub?gid=1569772209&single=true&output=csv';
 let geomData,
@@ -798,7 +798,7 @@ $( document ).ready(function(){
             d3.csv(cfmDataUrl),
             d3.csv(emergencyURL)
         ]).then(function(data){
-            geomData = topojson.feature(data[0], data[0].objects.worldtopo12022020);
+            geomData = topojson.feature(data[0], data[0].objects.geom);
             var id = 0;
             data[1].forEach(element => {
                 element['id'] = id + 1;

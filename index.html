@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <!-- CSS only -->
     <link rel="icon" href="https://www.rcce-collective.net/wp-content/uploads/2021/04/android-chrome-192x192-1.png" sizes="192x192" />
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.css" />
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-    crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/jquery.dataTables.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/39e5643f1a.js"></script>
@@ -29,6 +28,7 @@
     <link href='css/styles.css' rel='stylesheet' />
     <title>RCCE Community Feedback Mechanism Tracker</title>
 </head>
+
 <body>
     <div class="loader">
         <div class="sp sp-circle"></div>
@@ -39,16 +39,20 @@
             <div class="sur-couche">
                 <div class="details">
                     <h5>COMMUNITY FEEDBACK MECHANISM</h5>
-                    <div id="divider"><hr></div>
+                    <div id="divider">
+                        <hr>
+                    </div>
                     <div class="media">
                         <img src="assets/fonts/ifrc1.png" alt="" class="rounded float-left">
-                        <p>The Community Feedback Mechanism (CFM) Tracker monitors community feedback mechanisms led by the Collective Service's Partners to support RCCE 
-                            response on public health emergencies and more specifically on COVID-19. To learn more about terms and definitions, please check out our  <a href="https://www.rcce-collective.net/data/community-feedback/glossary/" target="_blank"><b>Glossary</b></a>.
+                        <p>The Community Feedback Mechanism (CFM) Tracker monitors community feedback mechanisms led by the Collective Service's Partners to support RCCE response on public health emergencies and more specifically on COVID-19. To learn more
+                            about terms and definitions, please check out our <a href="https://www.rcce-collective.net/data/community-feedback/glossary/" target="_blank"><b>Glossary</b></a>.
                         </p>
                     </div>
-                    <div id="submission"><a href="https://forms.gle/mDbSbaua1yfNkJc19" target="_blank">
-                                <input type="button" class="btn btn-info" value="Submit CFM">
-                            </a></div>
+                    <div id="submission">
+                        <a href="https://forms.gle/mDbSbaua1yfNkJc19" target="_blank">
+                            <input type="button" class="btn btn-info" value="Submit CFM">
+                        </a>
+                    </div>
                     <h6>GLOBAL OVERVIEw</h6>
                     <div id="globalStats"></div>
                     <div id="overview"></div>
@@ -60,9 +64,19 @@
                     <button id="zoom_in">+</button>
                     <button id="zoom_out">-</button>
                 </div>
+                <div class="searchCountry">
+                    <label for="countrySelect"><i class="fa-solid fa-globe"></i></label>
+                    <select name="countrySelect" id="countrySelect">
+                        <option value="all">All countries</option>
+                        <option value="">Senegal</option>
+                        <option value="">Mali</option>
+                        <option value="">Nigeria</option>
+                    </select>
+
+                </div>
             </div>
         </section>
-        <section >
+        <section>
             <div class="filters flex-centrer">
                 <!-- <span class="dtSearch">
                     <label id="searchBox"><input class="form-control" id="searchInput" type="text" placeholder="Search.."></label>
@@ -88,11 +102,11 @@
                     <select name="orgSelect" id="orgSelect"></select>
                 </span>
                 <!-- <span id="btns"> -->
-                    <!-- <button type="button" class="btn btn-tertiary" id="reset-table">
+                <!-- <button type="button" class="btn btn-tertiary" id="reset-table">
                         <span class="fa fa-refresh" data-toggle="tooltip" data-placement="top" title="Reset filters"></span>
                     </button> -->
-                    <button type="button" class="btn btn-tertiary" id="reset-table">Clear all selections</button>
-                    <button type="button" class="btn btn-tertiary exportData" id="exportTable">
+                <button type="button" class="btn btn-tertiary" id="reset-table">Clear all selections</button>
+                <button type="button" class="btn btn-tertiary exportData" id="exportTable">
                         <span class="fa fa-download" data-toggle="tooltip" data-placement="top" title="Download data"></span>
                     </button>
                 <!-- </span> -->
@@ -101,17 +115,18 @@
         <section class="fixWidth">
             <table id="datatable" class="row-border" style="width:100%">
                 <thead>
-                <tr>
-                    <th></th>
-                    <th>Organisation</th>
-                    <th>Country</th>
-                    <th>Status</th>
-                    <th>Emergency</th>
-                    <th>Frequence</th>
-                    <th>Channels</th>
-                    <th>Link</th>
-                    <th></th><th></th>
-                </tr>
+                    <tr>
+                        <th></th>
+                        <th>Organisation</th>
+                        <th>Country</th>
+                        <th>Status</th>
+                        <th>Emergency</th>
+                        <th>Frequence</th>
+                        <th>Channels</th>
+                        <th>Link</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
                 </thead>
             </table>
         </section>
@@ -127,5 +142,5 @@
     </div>
     <script type='text/javascript' src='js/bundle.js'></script>
 </body>
+
 </html>
-        

@@ -5,42 +5,42 @@ let regionsArr = ['All regions'],
 let countriesISO3Arr = [];
 let emergenciesArr = [];
 
-function choroplethMap(){
-    mapsvg.selectAll('path').each( function(element, index) {
+function choroplethMap() {
+    mapsvg.selectAll('path').each(function(element, index) {
         // console.log(element)
-        d3.select(this).transition().duration(500).attr('fill', function(d){
+        d3.select(this).transition().duration(500).attr('fill', function(d) {
             //var filtered = filteredCfmData.filter(pt => pt['ISO3']== d.properties.ISO_A3);
             return '#ccc';
         });
     });
 }
 
-function generateDefaultDetailPane(){
+function generateDefaultDetailPane() {
     var orgNums = organisationsArr.length - 1;
     $('.details > h6').text('global overview');
     $('#globalStats').html('');
     $('#globalStats')
         .append(
-            '<div class="row">'+
-                '<div class="col-sm-4 key-figure">'+
-                    '<div class="num" id="totalCfms">'+cfmData.length+'</div>'+
-                    '<h5># feedback mechanisms</h5>'+
-                '</div>'+
-                '<div class="col-sm-4 key-figure">'+
-                    '<div class="num" id="countriesCFM">'+countriesISO3Arr.length+'</div>'+
-                    '<h5># countries</h5>'+
-                '</div>'+
-                '<div class="col-sm-4 key-figure">'+
-                    '<div class="num" id="orgsCFM">'+orgNums+'</div>'+
-                    '<h5># organizations</h5>'+
-                '</div>'+
+            '<div class="row">' +
+            '<div class="col-sm-4 key-figure">' +
+            '<div class="num" id="totalCfms">' + cfmData.length + '</div>' +
+            '<h5># feedback mechanisms</h5>' +
+            '</div>' +
+            '<div class="col-sm-4 key-figure">' +
+            '<div class="num" id="countriesCFM">' + countriesISO3Arr.length + '</div>' +
+            '<h5># countries</h5>' +
+            '</div>' +
+            '<div class="col-sm-4 key-figure">' +
+            '<div class="num" id="orgsCFM">' + orgNums + '</div>' +
+            '<h5># organizations</h5>' +
+            '</div>' +
             '</div>'
         );
     $('#overview').addClass('hidden');
     $('#globalStats').removeClass('hidden');
 } // generateDefaultDetailPane
 
-function updatePane(data){
+function updatePane(data) {
     var arrCountries = [],
         arrOrgs = [];
     data.forEach(element => {
@@ -54,13 +54,13 @@ function updatePane(data){
     $('#orgsCFM').text(arrOrgs.length);
 }
 
-function slugify(texte){
+function slugify(texte) {
     return texte.toLowerCase()
-             .replace(/[^\w ]+/g, '')
-             .replace(/ +/g, '-');
+        .replace(/[^\w ]+/g, '')
+        .replace(/ +/g, '-');
 }
 //return the unique values of given col name
-function getColumnUniqueValues(){
+function getColumnUniqueValues() {
     var values = [];
     for (let index = 0; index < arguments.length; index++) {
         var arr = [];
@@ -76,13 +76,13 @@ function getColumnUniqueValues(){
     }
 
     return values;
-}//getColumnUniqueValues
+} //getColumnUniqueValues
 
-function generateRegionDropdown(){
+function generateRegionDropdown() {
     var options = "";
     for (let index = 0; index < regionsArr.length; index++) {
         const element = regionsArr[index];
-        index == 0 ? options += '<option value="all" selected>' + element + '</option>'  : 
+        index == 0 ? options += '<option value="all" selected>' + element + '</option>' :
             options += '<option value="' + element + '">' + element + '</option>';
     }
     $('#regionSelect').append(options);
@@ -91,9 +91,9 @@ function generateRegionDropdown(){
 } //generateRegionDropdown
 
 // generate or update the organisation dropdown select
-function generateOrgDropdown(data){
+function generateOrgDropdown(data) {
     var orgArr = [];
-    if(data != undefined) {  
+    if (data != undefined) {
         data.forEach(element => {
             orgArr.includes(element['Organisation Name']) ? '' : orgArr.push(element['Organisation Name']);
         });
@@ -106,7 +106,7 @@ function generateOrgDropdown(data){
     var options = "";
     for (let index = 0; index < orgArr.length; index++) {
         const element = orgArr[index];
-        index == 0 ? options += '<option value="all" selected>' + element + '</option>'  : 
+        index == 0 ? options += '<option value="all" selected>' + element + '</option>' :
             options += '<option value="' + element + '">' + element + '</option>';
     }
     $('#orgSelect').append(options);
@@ -114,38 +114,78 @@ function generateOrgDropdown(data){
 
 } //generateRegionDropdown
 
+function generateCountryDropdown() {
+    let countries = [];
+    for (let index = 0; index < countriesISO3Arr.length; index++) {
+        const iso = countriesISO3Arr[index];
+        countries.push({ country_code: countriesISO3Arr[index], country: countriesArr[index] });
+    }
 
-function generateEmergencyTags(){
+
+    countries.sort(function(a, b) {
+        var x = a.country.toLowerCase();
+        var y = b.country.toLowerCase();
+        if (x < y) { return -1; }
+        if (x > y) { return 1; }
+        return 0;
+    });
+
+    //create dropdown 
+    var dropdown = d3.select("#countrySelect")
+        .selectAll("option")
+        .data(countries)
+        .enter().append("option")
+        .text(function(d) { return d.country; })
+        .attr("value", function(d) {
+            return d.country_code;
+        });
+
+    $("#countrySelect").on("change", function(d) {
+        const selected = $("#countrySelect").val();
+        if (selected != "all") {
+            g.filter('.hasStudy').each(function(element) { //mapsvg.select('g').selectAll('.hasStudy')
+                if (element.properties.ISO_A3 == selected) {
+                    mapOnClick(element.properties.NAME, selected);
+                    $(this).attr('fill', hoverColor);
+                    $(this).addClass('clicked');
+
+                }
+            })
+        }
+    });
+} //generateCountryDropdown
+
+function generateEmergencyTags() {
     var labels = "";
     for (let index = 0; index < emergenciesArr.length; index++) {
         const element = emergenciesArr[index];
-        const idy = getEmergencyID(element);//(['COVID-19', 'Epidemics'].includes(element) ? element : "other")
-        labels +='<label><button type="button" class="btn btn-secondary emergency" id="'+idy+'" value="'+element+'">'+element+'</button></label>';
+        const idy = getEmergencyID(element); //(['COVID-19', 'Epidemics'].includes(element) ? element : "other")
+        labels += '<label><button type="button" class="btn btn-secondary emergency" id="' + idy + '" value="' + element + '">' + element + '</button></label>';
     }
     $('.emergencyFilter').append(labels);
     var buttonsEmergency = document.getElementsByClassName("emergency");
     for (var i = 0; i < buttonsEmergency.length; i++) {
-        buttonsEmergency[i].addEventListener('click', emergencyFilterclick);   
+        buttonsEmergency[i].addEventListener('click', emergencyFilterclick);
     }
 
 } //function generateEmergencyTags(){
 
-function getSubValues(lookUp, nestedArr){
+function getSubValues(lookUp, nestedArr) {
     var arrKey = [],
         arrValues = [];
     nestedArr.forEach(element => {
         element.key == lookUp ? arrKey = element.values : null;
     });
-    if(arrKey != []){
+    if (arrKey != []) {
         arrKey.forEach(element => {
             arrValues.push(element.key)
         });
     }
     return arrValues;
-}//getSubValues
+} //getSubValues
 
-function getEmergencyCategory(lookUp){
-    var emer ;
+function getEmergencyCategory(lookUp) {
+    var emer;
     emergencyData.forEach(element => {
         var arr = element.values;
         // for (let index = 0; arr < arr.length; index++) {
@@ -159,32 +199,32 @@ function getEmergencyCategory(lookUp){
         });
     });
     return emer;
-}//getEmergencyCategory
+} //getEmergencyCategory
 
-function getEmergencyID(emergency){
+function getEmergencyID(emergency) {
     var id;
     emergencyID.forEach(element => {
-        element.key == emergency? id = element.values[0].key : null;
+        element.key == emergency ? id = element.values[0].key : null;
     });
     return id;
-}//getEmergencyID 
+} //getEmergencyID 
 
-function clearnChannels(channel){
+function clearnChannels(channel) {
     channel = channel.replace(",", "")
-    // var items = [] ;
-    // var arr = channel.split(",");
-    // var trimedArr = arr.map(x => x.trim());
-    // for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
-    //     if (trimedArr[index]) {
-    //         items.push(trimedArr[index]);
-    //     }
-    // }
-    // console.log(items)
+        // var items = [] ;
+        // var arr = channel.split(",");
+        // var trimedArr = arr.map(x => x.trim());
+        // for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
+        //     if (trimedArr[index]) {
+        //         items.push(trimedArr[index]);
+        //     }
+        // }
+        // console.log(items)
 }
 
 
 // map js
-let isMobile = $(window).width()<767 ? true : false;
+let isMobile = $(window).width() < 767 ? true : false;
 let countriesArr = [];
 let g, mapsvg, projection, width, height, zoom, path;
 let viewportWidth = window.innerWidth;
@@ -192,16 +232,16 @@ let currentZoom = 1;
 let mapClicked = false;
 let selectedCountryFromMap = "all";
 let countrySelectedFromMap = false;
-let mapFillColor = '#204669',//'#C2DACA',//'#2F9C67', 
-    mapInactive = '#fff',//'#DBDEE6',//'#f1f1ee',//'#C2C4C6',
+let mapFillColor = '#204669', //'#C2DACA',//'#2F9C67', 
+    mapInactive = '#fff', //'#DBDEE6',//'#f1f1ee',//'#C2C4C6',
     mapActive = '#D90368',
-    hoverColor = '#D90368';//'#78B794';
+    hoverColor = '#D90368'; //'#78B794';
 
 function initiateMap() {
     width = viewportWidth;
     // height = (isMobile) ? 400 : 500;
     height = 500;
-    var mapScale = (isMobile) ? width/3.5 : width/10.6;
+    var mapScale = (isMobile) ? width / 3.5 : width / 10.6;
     var mapCenter = (isMobile) ? [12, 12] : [25, 25];
 
     projection = d3.geoMercator()
@@ -222,7 +262,7 @@ function initiateMap() {
         .call(zoom)
         .on("wheel.zoom", null)
         .on("dblclick.zoom", null);
-    
+
     mapsvg.append("rect")
         .attr("width", "100%")
         .attr("height", "100%")
@@ -233,101 +273,99 @@ function initiateMap() {
     var maptip = d3.select('#map').append('div').attr('class', 'd3-tip map-tip hidden');
 
     g = mapsvg.append("g").attr('id', 'countries')
-            .selectAll("path")
-            .data(geomData.features)
-            .enter()
-            .append("path")
-            .attr('d',path)
-            .attr('id', function(d){ 
-                return d.properties.countryIso3Code; 
-            })
-            .attr('class', function(d){
-              var className = (countriesISO3Arr.includes(d.properties.ISO_A3)) ? 'hasStudy' : 'inactive';
-              return className;
-            })
-            .attr('fill', function(d){
-              return countriesISO3Arr.includes(d.properties.ISO_A3) ? mapFillColor : mapInactive ;
-            })
-            .attr('stroke-width', .2)
-            .attr('stroke', '#d9d9d9');
+        .selectAll("path")
+        .data(geomData.features)
+        .enter()
+        .append("path")
+        .attr('d', path)
+        .attr('id', function(d) {
+            return d.properties.countryIso3Code;
+        })
+        .attr('class', function(d) {
+            var className = (countriesISO3Arr.includes(d.properties.ISO_A3)) ? 'hasStudy' : 'inactive';
+            return className;
+        })
+        .attr('fill', function(d) {
+            return countriesISO3Arr.includes(d.properties.ISO_A3) ? mapFillColor : mapInactive;
+        })
+        .attr('stroke-width', .2)
+        .attr('stroke', '#d9d9d9');
 
     mapsvg.transition()
-    .duration(750)
-    .call(zoom.transform, d3.zoomIdentity);
+        .duration(750)
+        .call(zoom.transform, d3.zoomIdentity);
 
     // choroplethMap();
 
     //zoom controls
     d3.select("#zoom_in").on("click", function() {
         zoom.scaleBy(mapsvg.transition().duration(500), 1.5);
-    }); 
+    });
     d3.select("#zoom_out").on("click", function() {
         zoom.scaleBy(mapsvg.transition().duration(500), 0.5);
     });
-    
-    var tipPays = d3.select('#countries').selectAll('path') 
-    g.filter('.hasStudy')
-    .on("mousemove", function(d){ 
-        if ( !$(this).hasClass('clicked')) {
-            $(this).attr('fill', hoverColor);
-        }
-        if (!mapClicked) {
-            // generateCountrytDetailPane(d.properties.ISO_A3, d.properties.NAME);
-        }
-        var mouse = d3.mouse(mapsvg.node()).map( function(d) { return parseInt(d); } );
-        maptip
-            .classed('hidden', false)
-            .attr('style', 'left:'+(mouse[0])+'px; top:'+(mouse[1]+25)+'px')
-            .html(d.properties.NAME);
-        
-    })
-    .on("mouseout", function(d) { 
-        if ( !$(this).hasClass('clicked')) {
-            $(this).attr('fill', mapFillColor);
-        }
-        if (!mapClicked) {
-            // generateDefaultDetailPane();
-        }
-        maptip.classed('hidden', true);
-    })
-    .on("click", function(d){
-        mapClicked = true;
-        selectedCountryFromMap = d.properties.NAME ;
-        mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
 
-        $(this).attr('fill', hoverColor);
-        $(this).addClass('clicked');
-        var countryData = filteredCfmData.filter(function(val){
-            return d.properties.ISO_A3 == val['ISO3'] ;
-        });
-        updateDataTable(countryData);
-        // desactivate org and reg filters
-        
-        // generateOverviewclicked(d.properties.ISO_A3, d.properties.NAME);
-        // $('.btn').removeClass('active');
-        // $('#all').toggleClass('active');
-        // $('#regionSelect').val('all');
-        
-    })
+    var tipPays = d3.select('#countries').selectAll('path')
+    g.filter('.hasStudy')
+        .on("mousemove", function(d) {
+            if (!$(this).hasClass('clicked')) {
+                $(this).attr('fill', hoverColor);
+            }
+            if (!mapClicked) {
+                // generateCountrytDetailPane(d.properties.ISO_A3, d.properties.NAME);
+            }
+            var mouse = d3.mouse(mapsvg.node()).map(function(d) { return parseInt(d); });
+            maptip
+                .classed('hidden', false)
+                .attr('style', 'left:' + (mouse[0]) + 'px; top:' + (mouse[1] + 25) + 'px')
+                .html(d.properties.NAME);
+
+        })
+        .on("mouseout", function(d) {
+            if (!$(this).hasClass('clicked')) {
+                $(this).attr('fill', mapFillColor);
+            }
+            if (!mapClicked) {
+                // generateDefaultDetailPane();
+            }
+            maptip.classed('hidden', true);
+        })
+        .on("click", function(d) {
+            mapOnClick(d.properties.NAME, d.properties.ISO_A3);
+            $(this).attr('fill', hoverColor);
+            $(this).addClass('clicked');
+        })
 
 } //initiateMap
 
+function mapOnClick(country, iso) {
+    mapClicked = true;
+    selectedCountryFromMap = country;
+    mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
 
-function showMapTooltip(d, maptip, text){
-var mouse = d3.mouse(mapsvg.node()).map( function(d) { return parseInt(d); } );
-maptip
-    .classed('hidden', false)
-    .attr('style', 'left:'+(mouse[0]+20)+'px;top:'+(mouse[1]+20)+'px')
-    .html(text)
+    $(this).attr('fill', hoverColor);
+    $(this).addClass('clicked');
+    var countryData = filteredCfmData.filter(function(val) {
+        return iso == val['ISO3'];
+    });
+    updateDataTable(countryData);
+} //mapOnClick
+
+function showMapTooltip(d, maptip, text) {
+    var mouse = d3.mouse(mapsvg.node()).map(function(d) { return parseInt(d); });
+    maptip
+        .classed('hidden', false)
+        .attr('style', 'left:' + (mouse[0] + 20) + 'px;top:' + (mouse[1] + 20) + 'px')
+        .html(text)
 }
 
 function hideMapTooltip(maptip) {
-    maptip.classed('hidden', true) 
+    maptip.classed('hidden', true)
 }
 
 // zoom on buttons click
-function zoomed(){
-    const {transform} = d3.event;
+function zoomed() {
+    const { transform } = d3.event;
     currentZoom = transform.k;
 
     if (!isNaN(transform.k)) {
@@ -338,50 +376,52 @@ function zoomed(){
 }
 
 // zoom on region select
-function zoomToRegion(region){
+function zoomToRegion(region) {
     var isInRegion = true;
-    if (region=="All regions"){ //reset map zoom
-      mapsvg.transition()
-        .duration(750)
-        .call(zoom.transform, d3.zoomIdentity);
+    if (region == "All regions") { //reset map zoom
+        mapsvg.transition()
+            .duration(750)
+            .call(zoom.transform, d3.zoomIdentity);
+    } else {
+        // get a country code from the region
+        var oneCountry = getFirstCountryOfRegion(region);
+        geomData.features.forEach(function(c) {
+            if (c.properties.ISO_A3 == oneCountry) {
+                var offsetX = 0; //(isMobile) ? 0 : 50;
+                var offsetY = 0; //(isMobile) ? 0 : 25;
+                const [
+                    [x0, y0],
+                    [x1, y1]
+                ] = path.bounds(c);
+                // d3.event.stopPropagation();
+                mapsvg.transition().duration(750).call(
+                    zoom.transform,
+                    d3.zoomIdentity
+                    .translate(width / 2, height / 2)
+                    .scale(Math.min(3, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
+                    .translate(-(x0 + x1) / 2 + offsetX, -(y0 + y1) / 2 - offsetY),
+                    // d3.mouse(mapsvg.node())
+                );
+            }
+        });
     }
-    else{
-      // get a country code from the region
-      var oneCountry = getFirstCountryOfRegion(region);
-      geomData.features.forEach(function(c){
-        if (c.properties.ISO_A3 == oneCountry){
-          var offsetX = 0;//(isMobile) ? 0 : 50;
-          var offsetY = 0;//(isMobile) ? 0 : 25;
-          const [[x0, y0], [x1, y1]] = path.bounds(c);
-          // d3.event.stopPropagation();
-          mapsvg.transition().duration(750).call(
-            zoom.transform,
-            d3.zoomIdentity
-              .translate(width / 2, height / 2)
-              .scale(Math.min(3, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
-              .translate(-(x0 + x1) / 2 + offsetX, -(y0 + y1) / 2 - offsetY),
-            // d3.mouse(mapsvg.node())
-          );
-        }
-      });
-    }
-  }
+}
 
 
 // return a country belonging a given region
-function getFirstCountryOfRegion(region){
-  var country = "";
-  region == 'ESAR' ? country = 'BDI' :
-  region == 'WCAR' ? country = 'TCD' :
-  region == 'AP' ? country = 'MYS' :
-  region == 'LAC' ? country = 'COL' :
-  region == 'MENA' ? country = 'YEM' :
-  region == 'EURO' ? country = 'TUR' : '';
-  return country;
+function getFirstCountryOfRegion(region) {
+    var country = "";
+    region == 'ESAR' ? country = 'BDI' :
+        region == 'WCAR' ? country = 'TCD' :
+        region == 'AP' ? country = 'MYS' :
+        region == 'LAC' ? country = 'COL' :
+        region == 'MENA' ? country = 'YEM' :
+        region == 'EURO' ? country = 'TUR' : '';
+    return country;
 } //getFirstCountryOfRegion
 // get status formatted in tags
-function getFormattedStatus(item){
-    var items = [] ;
+function getFormattedStatus(item) {
+    var items = [];
     var arr = item.split(",");
     var trimedArr = arr.map(x => x.trim());
     for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
@@ -392,23 +432,23 @@ function getFormattedStatus(item){
     var formatedDims = "";
     items.forEach(element => {
         var className = slugify(element);
-        formatedDims +='<label class="alert tag-'+className+'">'+element+'</label>';
+        formatedDims += '<label class="alert tag-' + className + '">' + element + '</label>';
     });
     return formatedDims;
-}//getFormattedStatus
+} //getFormattedStatus
 
-function getEmergenciesTagged(item){
+function getEmergenciesTagged(item) {
     var items = getFormattedColumn(item);
     var formattedEmergencies = "";
     items.forEach(element => {
         var id = getEmergencyID(getEmergencyCategory(element));
         var className = "tag-" + id;
-        formattedEmergencies +='<label class="alert alert-emergency '+className+'">'+element+'</label>';
+        formattedEmergencies += '<label class="alert alert-emergency ' + className + '">' + element + '</label>';
     });
     return formattedEmergencies;
-}//getEmergenciesTagged
+} //getEmergenciesTagged
 
-function getDataTableData(data = filteredCfmData){
+function getDataTableData(data = filteredCfmData) {
     var dt = [];
     data.forEach(element => {
         dt.push(
@@ -416,11 +456,11 @@ function getDataTableData(data = filteredCfmData){
                 element['id'],
                 element['Organisation Name'],
                 element['Country'],
-                getFormattedStatus(element['Status']), 
+                getFormattedStatus(element['Status']),
                 getEmergenciesTagged(element['Emergency']),
-                element['Frequency'], 
-                element['Channels'], 
-                element['Link'] != '' ? '<a href="'+element['Link']+'" target="blank"><i class="fa fa-external-link"></i></a>' : null,
+                element['Frequency'],
+                element['Channels'],
+                element['Link'] != '' ? '<a href="' + element['Link'] + '" target="blank"><i class="fa fa-external-link"></i></a>' : null,
                 //hidden
                 element['Name'], element['Scale'], element['# Feedbacks (last 6 months)'], element['Target'],
                 element['Details'], element['Keyword'], element['National Coordination'], element['Inter-agency'],
@@ -431,28 +471,26 @@ function getDataTableData(data = filteredCfmData){
 } //getDataTableData
 
 // generate data table
-function generateDataTable(){
+function generateDataTable() {
     var dtData = getDataTableData();
     datatable = $('#datatable').DataTable({
-        data : dtData,
-        "columns": [
-            {
+        data: dtData,
+        "columns": [{
                 "className": 'details-control',
                 "orderable": false,
                 "data": null,
                 "defaultContent": '<i class="fa fa-caret-down"></i>',
                 "width": "1%"
             },
-            {"width": "10%"},
-            {"width": "8%"},
-            {"width": "2%"},
-            {"width": "11%"},
-            {"width": "5%"},
-            {"width": "15%"},
-            {"width": "1%"}
+            { "width": "10%" },
+            { "width": "8%" },
+            { "width": "2%" },
+            { "width": "11%" },
+            { "width": "5%" },
+            { "width": "15%" },
+            { "width": "1%" }
         ],
-        "columnDefs": [
-            {
+        "columnDefs": [{
                 "className": "dt-head-left",
                 "targets": "_all"
             },
@@ -460,52 +498,52 @@ function generateDataTable(){
                 "defaultContent": "-",
                 "targets": "_all"
             },
-            {"targets": [8], "visible": false},{"targets": [9], "visible": false},{"targets": [10], "visible": false},
-            {"targets": [11], "visible": false},{"targets": [12], "visible": false},{"targets": [13], "visible": false},
-            {"targets": [14], "visible": false},{"targets": [15], "visible": false},{"targets": [16], "visible": false},
-            {"targets": [18], "visible": false},{"targets": [17], "visible": false}
+            { "targets": [8], "visible": false }, { "targets": [9], "visible": false }, { "targets": [10], "visible": false },
+            { "targets": [11], "visible": false }, { "targets": [12], "visible": false }, { "targets": [13], "visible": false },
+            { "targets": [14], "visible": false }, { "targets": [15], "visible": false }, { "targets": [16], "visible": false },
+            { "targets": [18], "visible": false }, { "targets": [17], "visible": false }
             // { "searchable" : true, "targets": "_all"},
             // {"type": "myDate","targets": 4}
         ],
         "pageLength": 10,
         "bLengthChange": false,
         "pagingType": "simple_numbers",
-        "order":[[1, 'asc']],
+        "order": [
+            [1, 'asc']
+        ],
         "dom": "Blrtp",
         "buttons": {
-            "buttons": [
-                {
-                    extend: 'excelHtml5',
-                    "className": "exportData",
-                    exportOptions:{
-                        page: ':all',
-                        format:{
-                            header: function(data, columnIdx){
-                                var hd = ['Name', 'Scale', '# Feedbacks (last 6 months)', 'Target', 'Details','Keyword','National Coordination','Inter-agency','Partners', 'Contact email', 'Status'];
-                                if(columnIdx >= 8){
-                                    return hd[columnIdx-8];
-                                }else {
-                                    return data;
-                                }
+            "buttons": [{
+                extend: 'excelHtml5',
+                "className": "exportData",
+                exportOptions: {
+                    page: ':all',
+                    format: {
+                        header: function(data, columnIdx) {
+                            var hd = ['Name', 'Scale', '# Feedbacks (last 6 months)', 'Target', 'Details', 'Keyword', 'National Coordination', 'Inter-agency', 'Partners', 'Contact email', 'Status'];
+                            if (columnIdx >= 8) {
+                                return hd[columnIdx - 8];
+                            } else {
+                                return data;
                             }
                         }
                     }
                 }
-            ]
-        }
+            }]
+        },
+        response: true
     });
 
-    $('#datatable tbody').on('click', 'td.details-control', function(){
+    $('#datatable tbody').on('click', 'td.details-control', function() {
         var tr = $(this).closest('tr');
         var row = datatable.row(tr);
-        if(row.child.isShown()){
+        if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
             tr.css('background-color', '#fff');
             tr.find('td.details-control i').removeClass('fa-caret-right');
             tr.find('td.details-control i').addClass('fa-caret-down');
-        }
-        else {
+        } else {
             row.child(format(row.data())).show();
             tr.addClass('shown');
             tr.css('background-color', '#f5f5f5');
@@ -514,7 +552,7 @@ function generateDataTable(){
             $('#cfmDetails').parent('td').css('background-color', '#f5f5f5');
             tr.find('td.details-control i').removeClass('fa-caret-down');
             tr.find('td.details-control i').addClass('fa-caret-right');
-    
+
         }
     });
 } //generateDataTable
@@ -524,101 +562,100 @@ $("#exportTable").on("click", function() {
     $(".buttons-excel").trigger("click");
 });
 
-function format(arr){
-    filtered = cfmData.filter(function(d){ return d['id']==arr[0]; });
+function format(arr) {
+    filtered = cfmData.filter(function(d) { return d['id'] == arr[0]; });
     var buttonLink = "";
-    if (filtered[0]['Link'] != ""){
-        buttonLink = '<a href="'+filtered[0]['Link']+'" target="_blank"><input type="button" class="btn btn-info" value="Visit link"></a>';
-    } 
-    return '<table class="tabDetail" id="cfmDetails" >'+
-                '<tr>'+
-                    '<td>&nbsp;</td>'+
-                    '<td>&nbsp;</td>'+
-                    '<td>&nbsp;</td>'+
-                    '<td>&nbsp;</td>'+
-                    '<td>&nbsp;</td>'+
-                    '<td>&nbsp;</td>'+
-                    '<td>'+
-                        '<table style="width:100%;">'+
-                                '<tbody>'+
-                                    '<tr>'+
-                                        '<td><strong>Name</strong></td>'+
-                                        '<td>'+filtered[0]['Name']+'</td>'+
-                                        '<td><strong>Start date</strong></td>'+
-                                        '<td>'+filtered[0]['Start date']+'</td>'+
-                                        '<td><strong>National Coordination</strong></td>'+
-                                        '<td>'+filtered[0]['National Coordination']+'</td>'+
-                                    '</tr>'+
-                                    '<tr>'+
-                                        '<td><strong>#Feedback</strong></td>'+
-                                        '<td>'+filtered[0]['# Feedbacks (last 6 months)']+'</td>'+
-                                        '<td><strong>Scale<s/trong></td>'+
-                                        '<td>'+filtered[0]['Scale']+'</td>'+
-                                        '<td><strong>Interagency</strong></td>'+
-                                        '<td>'+filtered[0]['Inter-agency']+'</td>'+
-                                    '</tr>'+
-                                    '<tr>'+
-                                        '<td><strong>Target</strong></td>'+
-                                        '<td colspan="3">'+filtered[0]['Target']+'</td>'+
-                                        '<td><strong>Partners</strong></td>'+
-                                        '<td>'+filtered[0]['Partners']+'</td>'+
-                                    '</tr>'+
-                                    '<tr>'+
-                                        '<td><strong>Description</strong></td>'+
-                                        '<td colspan="3">'+filtered[0]['Details']+'</td>'+
-                                        '<td colspan="2" rowspan="2"></td>'+
-                                    '</tr>'+
-                                    '<tr>'+
-                                        '<td><strong>Actions</strong></td>'+
-                                        '<td colspan="3">'+filtered[0]['Usage']+'</td>'+
-                                    '</tr>'+
-                                    '<tr>'+
-                                        '<td><strong>Keywords</strong></td>'+
-                                        '<td colspan="3">'+filtered[0]['Keyword']+'</td>'+
-                                        '<td colspan="2"></td>'+
-                                    '</tr>'+
-                                    '<tr>'+
-                                        '<td><strong>Contact</strong></td>'+
-                                        '<td>'+filtered[0]['Contact name']+'</td>'+
-                                        '<td>'+filtered[0]['Contact email']+'</td>'+
-                                        '<td></td>'+
-                                        '<td>'+buttonLink+'</td>'+
-                                        '<td></td>'+
-                                    '</tr>'+
-                            '</tbody>'+
-                        '</table>'+
-                    '</td>'+
-                    '<td>&nbsp;</td>'+
-                '</tr>'+
-            '</table>'
-}//format
+    if (filtered[0]['Link'] != "") {
+        buttonLink = '<a href="' + filtered[0]['Link'] + '" target="_blank"><input type="button" class="btn btn-info" value="Visit link"></a>';
+    }
+    return '<table class="tabDetail" id="cfmDetails" >' +
+        '<tr>' +
+        '<td>&nbsp;</td>' +
+        '<td>&nbsp;</td>' +
+        '<td>&nbsp;</td>' +
+        '<td>&nbsp;</td>' +
+        '<td>&nbsp;</td>' +
+        '<td>&nbsp;</td>' +
+        '<td>' +
+        '<table style="width:100%;">' +
+        '<tbody>' +
+        '<tr>' +
+        '<td><strong>Name</strong></td>' +
+        '<td>' + filtered[0]['Name'] + '</td>' +
+        '<td><strong>Start date</strong></td>' +
+        '<td>' + filtered[0]['Start date'] + '</td>' +
+        '<td><strong>National Coordination</strong></td>' +
+        '<td>' + filtered[0]['National Coordination'] + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td><strong>#Feedback</strong></td>' +
+        '<td>' + filtered[0]['# Feedbacks (last 6 months)'] + '</td>' +
+        '<td><strong>Scale<s/trong></td>' +
+        '<td>' + filtered[0]['Scale'] + '</td>' +
+        '<td><strong>Interagency</strong></td>' +
+        '<td>' + filtered[0]['Inter-agency'] + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td><strong>Target</strong></td>' +
+        '<td colspan="3">' + filtered[0]['Target'] + '</td>' +
+        '<td><strong>Partners</strong></td>' +
+        '<td>' + filtered[0]['Partners'] + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td><strong>Description</strong></td>' +
+        '<td colspan="3">' + filtered[0]['Details'] + '</td>' +
+        '<td colspan="2" rowspan="2"></td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td><strong>Actions</strong></td>' +
+        '<td colspan="3">' + filtered[0]['Usage'] + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td><strong>Keywords</strong></td>' +
+        '<td colspan="3">' + filtered[0]['Keyword'] + '</td>' +
+        '<td colspan="2"></td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td><strong>Contact</strong></td>' +
+        '<td>' + filtered[0]['Contact name'] + '</td>' +
+        '<td>' + filtered[0]['Contact email'] + '</td>' +
+        '<td></td>' +
+        '<td>' + buttonLink + '</td>' +
+        '<td></td>' +
+        '</tr>' +
+        '</tbody>' +
+        '</table>' +
+        '</td>' +
+        '<td>&nbsp;</td>' +
+        '</tr>' +
+        '</table>'
+} //format
 
-function updateDataTable(data = cfmData){
+function updateDataTable(data = cfmData) {
     var dt = getDataTableData(data);
     $('#datatable').dataTable().fnClearTable();
     $('#datatable').dataTable().fnAddData(dt);
 
 } //updateDataTable
 
-function getFilteredDataFromDropdown(inputData){
+function getFilteredDataFromDropdown(inputData) {
     var org = $('#orgSelect').val();
     var region = $('#regionSelect').val();
     var data = (inputData == undefined) ? filteredCfmData : inputData;
-    if(org != "all" && region != "all") {
-        data = filteredCfmData.filter(function(d){
+    if (org != "all" && region != "all") {
+        data = filteredCfmData.filter(function(d) {
             return (d['Region'] == region) && (d['Organisation Name'] == org);
         })
-    }
-    else {
-        org == "all" ? data = data.filter(function(d){ return d['Region'] == region ;}) :
-        region == "all" ? data = data.filter(function(d){ return d['Organisation Name'] == org ;}) : '';
+    } else {
+        org == "all" ? data = data.filter(function(d) { return d['Region'] == region; }) :
+            region == "all" ? data = data.filter(function(d) { return d['Organisation Name'] == org; }) : '';
     }
     return data;
-}//getFilteredDataFromDropdown
+} //getFilteredDataFromDropdown
 
 // get result data from status and emergency filters
-function getFilteredDataFromTags(inputData){
-    var statusTag = "all", 
+function getFilteredDataFromTags(inputData) {
+    var statusTag = "all",
         emergencyFilter = "all";
     var data = (inputData == undefined) ? filteredCfmData : inputData;
     for (var i = 0; i < buttonsTags.length; i++) {
@@ -632,29 +669,31 @@ function getFilteredDataFromTags(inputData){
         }
     }
 
-    if(statusTag !="all"){
-        data = data.filter(function(d){ return d['Status'] == statusTag; });
+    if (statusTag != "all") {
+        data = data.filter(function(d) { return d['Status'] == statusTag; });
     }
-    if(emergencyFilter != "all"){
+    if (emergencyFilter != "all") {
         var dt;
         // Emergency
-        if(emergenciesArr.includes(emergencyFilter)){
-            dt = data.filter(function(d){ 
+        if (emergenciesArr.includes(emergencyFilter)) {
+            dt = data.filter(function(d) {
                 var arr = getFormattedColumn(d['Emergency']);
-                return arr.includes(emergencyFilter) ;}) ;
-        }else {
-            dt = data.filter(function(d){ 
+                return arr.includes(emergencyFilter);
+            });
+        } else {
+            dt = data.filter(function(d) {
                 var arr = getFormattedColumn(d['Emergency']);
-                return !findOneEmergency(emergenciesArr, arr); }) ;
+                return !findOneEmergency(emergenciesArr, arr);
+            });
         }
         data = dt;
     }
     return data;
-}//getFilteredDataFromTags
+} //getFilteredDataFromTags
 
 // returns a formatted array with purposes/emergencies 
-function getFormattedColumn(item){
-    var items = [] ;
+function getFormattedColumn(item) {
+    var items = [];
     var arr = item.split(",");
     var trimedArr = arr.map(x => x.trim());
     for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
@@ -667,18 +706,18 @@ function getFormattedColumn(item){
 
 var buttonsTags = document.getElementsByClassName("filter");
 for (var i = 0; i < buttonsTags.length; i++) {
-    buttonsTags[i].addEventListener('click', statusFilterClick);   
+    buttonsTags[i].addEventListener('click', statusFilterClick);
 }
 
 var buttonsEmergency = document.getElementsByClassName("emergency");
 
 function findOneEmergency(emergenciesArrTest, arr) {
-    return arr.some(function (v) {
+    return arr.some(function(v) {
         return emergenciesArrTest.indexOf(v) >= 0;
     });
 };
 
-function applyAllFilters(){
+function applyAllFilters() {
     var statusTag = $('#statusSelect').val();
     emergencyFilter = "all";
     var org = $('#orgSelect').val();
@@ -695,23 +734,24 @@ function applyAllFilters(){
         }
     }
 
-    if(statusTag != "all") {
-        data = data.filter(function(d){ return d['Status'] == statusTag; });
+    if (statusTag != "all") {
+        data = data.filter(function(d) { return d['Status'] == statusTag; });
     }
-    if(region != "all") {
-        data = data.filter(function(d){ return d['Region'] == region; });
+    if (region != "all") {
+        data = data.filter(function(d) { return d['Region'] == region; });
     }
-    if(org != "all") {
-        data = data.filter(function(d){ return d['Organisation Name'] == org; });
+    if (org != "all") {
+        data = data.filter(function(d) { return d['Organisation Name'] == org; });
     }
-    if(emergencyFilter != "all"){
-        if(emergencyFilter == "COVID-19"){
-            data = data.filter(function(d){ 
+    if (emergencyFilter != "all") {
+        if (emergencyFilter == "COVID-19") {
+            data = data.filter(function(d) {
                 var arr = getFormattedColumn(d['Emergency']);
-                return arr.includes(emergencyFilter) ;}) ;
-        }else {
+                return arr.includes(emergencyFilter);
+            });
+        } else {
             var emergencies = getSubValues(emergencyFilter, emergencyData);
-            data = data.filter(function(d){
+            data = data.filter(function(d) {
                 var arr = getFormattedColumn(d['Emergency']);
                 return findOneEmergency(emergencies, arr);
             })
@@ -720,18 +760,18 @@ function applyAllFilters(){
     return data;
 }
 
-function emergencyFilterclick(){
+function emergencyFilterclick() {
     $('.emergency').removeClass('active');
     $(this).toggleClass('active');
     var filter = applyAllFilters();
-    updateDataTable(filter); 
+    updateDataTable(filter);
     updatePane(filter);
     //reset map
     mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
-}//emergencyFilterclick
+} //emergencyFilterclick
 
 // reset all filters and filter only clicked
-function statusFilterClick(){
+function statusFilterClick() {
     $('.filter').removeClass('active');
     $(this).toggleClass('active');
     var filter = applyAllFilters();
@@ -740,9 +780,9 @@ function statusFilterClick(){
     updatePane(filter);
     //reset map
     mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
-}//statusFilterClick
+} //statusFilterClick
 
-$('#statusSelect').on('change', function(d){
+$('#statusSelect').on('change', function(d) {
     var filter = applyAllFilters();
     updateDataTable(filter);
     updatePane(filter);
@@ -750,7 +790,7 @@ $('#statusSelect').on('change', function(d){
     mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
 });
 
-$('#orgSelect').on('change', function(d){
+$('#orgSelect').on('change', function(d) {
     var filter = applyAllFilters();
     updateDataTable(filter);
     updatePane(filter);
@@ -758,19 +798,20 @@ $('#orgSelect').on('change', function(d){
     mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
 });
 
-$('#regionSelect').on('change', function(e){
+$('#regionSelect').on('change', function(e) {
     var filter = applyAllFilters();
     updateDataTable(filter);
     updatePane(filter);
     //reset map
     mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
-  });
+});
 
-$('#reset-table').on('click', function(){
+$('#reset-table').on('click', function() {
     $('.emergency').removeClass('active');
     $('.filter').removeClass('active');
-    
+
     $('#regionSelect').val('all');
+    $('#countrySelect').val('all');
     generateOrgDropdown();
     generateDefaultDetailPane();
     // reset map selection
@@ -779,7 +820,7 @@ $('#reset-table').on('click', function(){
     var dt = getDataTableData();
     $('#datatable').dataTable().fnClearTable();
     $('#datatable').dataTable().fnAddData(dt)
-    // }
+        // }
 });
 //v1.0 
 let geodataUrl = 'data/wld052022.json';
@@ -791,45 +832,47 @@ let geomData,
     emergencyData,
     emergencyID;
 
-$( document ).ready(function(){
-    function getData(){
+$(document).ready(function() {
+    function getData() {
         Promise.all([
             d3.json(geodataUrl),
             d3.csv(cfmDataUrl),
             d3.csv(emergencyURL)
-        ]).then(function(data){
+        ]).then(function(data) {
             geomData = topojson.feature(data[0], data[0].objects.geom);
             var id = 0;
             data[1].forEach(element => {
                 element['id'] = id + 1;
-                id = id + 1 +Math.floor(Math.random() * 10);
+                id = id + 1 + Math.floor(Math.random() * 10);
             });
             cfmData = data[1];
             filteredCfmData = data[1];
             var colUniqueValues = getColumnUniqueValues('Country', 'ISO3', 'Region', 'Organisation Name');
             countriesArr = colUniqueValues[0],
-            countriesISO3Arr = colUniqueValues[1],
-            regionsArr.push(...colUniqueValues[2]),
-            organisationsArr.push(...colUniqueValues[3]);
+                countriesISO3Arr = colUniqueValues[1],
+                regionsArr.push(...colUniqueValues[2]),
+                organisationsArr.push(...colUniqueValues[3]);
+
             //Emergency processing
             emergencyData = d3.nest()
-                    .key(function(d){ return d['Category'];})
-                    .key(function(d){ return d['Emergencies'];})
-                    .rollup(function(v){ return d3.sum(v, function(d){ return d.lenght; })})
-                    .entries(data[2]);
+                .key(function(d) { return d['Category']; })
+                .key(function(d) { return d['Emergencies']; })
+                .rollup(function(v) { return d3.sum(v, function(d) { return d.lenght; }) })
+                .entries(data[2]);
             emergencyData.forEach(element => {
                 emergenciesArr.push(element.key);
             });
             emergencyID = d3.nest()
-                .key(function(d){ return d['Category'];})
-                .key(function(d){ return d['ID'];})
-                .rollup(function(v){ return d3.sum(v, function(d){ return d.lenght; })})
+                .key(function(d) { return d['Category']; })
+                .key(function(d) { return d['ID']; })
+                .rollup(function(v) { return d3.sum(v, function(d) { return d.lenght; }) })
                 .entries(data[2]);
 
             generateEmergencyTags();
             generateDefaultDetailPane();
             generateRegionDropdown();
             generateOrgDropdown();
+            generateCountryDropdown();
             initiateMap();
             generateDataTable();
             //remove loader and show vis
@@ -840,4 +883,3 @@ $( document ).ready(function(){
 
     getData();
 });
-

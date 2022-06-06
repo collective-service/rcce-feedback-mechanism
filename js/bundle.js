@@ -334,7 +334,7 @@ function initiateMap() {
             mapOnClick(d.properties.NAME, d.properties.ISO_A3);
             $(this).attr('fill', hoverColor);
             $(this).addClass('clicked');
-            $('#countrySelect').val('all');
+            $('#countrySelect').val(d.properties.ISO_A3);
         })
 
 } //initiateMap

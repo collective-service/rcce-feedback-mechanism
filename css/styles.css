@@ -159,7 +159,7 @@ body {
     font-size: 0.75rem;
     line-height: 1.5;
     width: 0;
-    margin: 0;
+    margin: 0 0 0 5px;
     padding: 0;
     box-shadow: none;
 }

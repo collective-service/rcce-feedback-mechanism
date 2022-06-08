@@ -116,12 +116,13 @@ function generateOrgDropdown(data) {
 
 function generateCountryDropdown() {
     let countries = [];
-    for (let index = 0; index < countriesISO3Arr.length; index++) {
-        const iso = countriesISO3Arr[index];
-        countries.push({ country_code: countriesISO3Arr[index], country: countriesArr[index] });
-    }
 
-
+    countriesISO3Arr.forEach(iso => {
+        const srce = geomData.features.filter((s) => { return s.properties.ISO_A3 == iso; });
+        if (srce.length > 0) {
+            countries.push({ country_code: iso, country: srce[0].properties.NAME });
+        }
+    });
     countries.sort(function(a, b) {
         var x = a.country.toLowerCase();
         var y = b.country.toLowerCase();
@@ -129,16 +130,21 @@ function generateCountryDropdown() {
         if (x > y) { return 1; }
         return 0;
     });
-
     //create dropdown 
-    var dropdown = d3.select("#countrySelect")
-        .selectAll("option")
-        .data(countries)
-        .enter().append("option")
-        .text(function(d) { return d.country; })
-        .attr("value", function(d) {
-            return d.country_code;
-        });
+    let options = '';
+    for (let index = 0; index < countries.length; index++) {
+        options += '<option value="' + countries[index].country_code + '">' + countries[index].country + '</option>';
+    }
+    $("#countrySelect").append(options);
+    // var dropdown = d3.select("#countrySelect")
+    //     .selectAll("option")
+    //     .data(countries)
+    //     .enter().append("option")
+    //     .attr("value", function(d) {
+    //         return d.country_code;
+    //     })
+    //     .text(function(d) { return d.country; });
+
 
     $("#countrySelect").on("change", function(d) {
         const selected = $("#countrySelect").val();
@@ -148,10 +154,11 @@ function generateCountryDropdown() {
                     mapOnClick(element.properties.NAME, selected);
                     $(this).attr('fill', hoverColor);
                     $(this).addClass('clicked');
-
                 }
-            })
+            });
+            return;
         }
+        $('#reset-table').trigger("click");
     });
 } //generateCountryDropdown
 
@@ -817,11 +824,10 @@ $('#reset-table').on('click', function() {
     generateDefaultDetailPane();
     // reset map selection
     mapsvg.select('g').selectAll('.hasStudy').attr('fill', mapFillColor);
-    // if(countrySelectedFromMap){
     var dt = getDataTableData();
     $('#datatable').dataTable().fnClearTable();
     $('#datatable').dataTable().fnAddData(dt)
-        // }
+
 });
 //v1.0 
 let geodataUrl = 'data/wld052022.json';

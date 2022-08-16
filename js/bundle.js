@@ -274,7 +274,7 @@ function initiateMap() {
         .attr("width", "100%")
         .attr("height", "100%")
         // .attr("fill", "#99daea");
-        .attr("fill", "#d9d9d9");
+        .attr("fill", "#d9d9d9"); //
 
     //map tooltips
     var maptip = d3.select('#map').append('div').attr('class', 'd3-tip map-tip hidden');

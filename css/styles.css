@@ -106,7 +106,7 @@ body {
 
 .details h6 {
     text-transform: uppercase;
-    font-size: 17px;
+    font-size: 1.2rem;
     color: #204669;
     padding-bottom: 10px;
 }
@@ -119,7 +119,7 @@ body {
 .details .key-figure #sourceLabel {
     font-family: "Source Sans Pro", sans-serif;
     font-weight: normal;
-    font-size: 0.83rem;
+    font-size: 0.8rem;
     line-height: 1;
     color: #000;
     text-transform: uppercase;
@@ -129,7 +129,7 @@ body {
     font-family: "Source Sans Pro", sans-serif;
     font-weight: bold;
     font-size: 2rem;
-    line-height: 1;
+    line-height: 2rem;
     min-height: 40px;
     color: #204669;
 }
@@ -147,7 +147,7 @@ body {
 }
 
 .searchCountry label {
-    font-size: 28px;
+    font-size: 2rem;
     margin-bottom: 0;
     color: #204669;
 }
@@ -157,7 +157,7 @@ body {
     border-color: #d9d9d9;
     height: 42px;
     font-size: 0.75rem;
-    line-height: 1.5;
+    line-height: 1.5rem;
     width: 0;
     margin: 0 0 0 5px;
     padding: 0;
@@ -191,7 +191,7 @@ body {
     color: #ffffff !important;
     border-color: rgba(0, 0, 0, 0);
     border-radius: 5px;
-    font-size: 12px;
+    font-size: .8rem;
     font-family: "Open Sans", Helvetica, Arial, Lucida, sans-serif !important;
     background-color: #D90368;
 }
@@ -303,16 +303,17 @@ body {
 
 .key-figure h5 {
     font-family: "Source Sans Pro", sans-serif;
-    font-size: 0.85rem;
-    line-height: 1.7;
+    font-size: 0.8rem;
+    line-height: 1.7rem;
+    font-weight: 500;
     color: #000000;
     text-transform: uppercase;
 }
 
 .key-figure .num {
     font-family: "Gotham Bold", sans-serif;
-    font-size: 40px;
-    line-height: 40px;
+    font-size: 2rem;
+    line-height: 2rem;
     font-weight: bold;
     min-height: 40px;
     color: #204669;
@@ -322,10 +323,11 @@ select {
     background-color: #fff;
     border-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 8px rgba(0 0 0 / 30%);
     font-family: "Source Sans Pro", sans-serif;
-    font-size: 0.75rem;
-    line-height: 1.5;
+    font-size: 0.8rem;
+    line-height: 1.5rem;
+    font-weight: 500;
     height: 30px;
     width: 190px;
     margin: 0 5px 0 10px;
@@ -338,7 +340,7 @@ select {
 }
 
 .purpose h6 span {
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .btn-tertiary {
@@ -346,8 +348,8 @@ select {
     outline: none;
     display: block;
     padding: 5px 8px 5px 8px;
-    font-size: 0.78rem;
-    line-height: 1.5;
+    font-size: 0.7rem;
+    line-height: 1.5rem;
 }
 
 #datatable {
@@ -361,13 +363,14 @@ table.dataTable {
 table.dataTable tbody tr {
     vertical-align: top;
     padding-top: 5px;
-    font-size: 0.83rem;
+    font-size: 0.5rem;
 }
 
 #datatable.dataTable td {
     vertical-align: top;
-    font-size: 0.83rem;
-    line-height: 1.5;
+    font-size: 0.8rem;
+    font-weight: 300;
+    /* line-height: 1.5; */
 }
 
 #datatable.dataTable td .Active {
@@ -385,8 +388,9 @@ table.dataTable tbody tr {
 table.dataTable thead th,
 table.dataTable thead td {
     vertical-align: top;
-    font-size: 0.83rem;
+    font-size: 0.8rem;
     line-height: 1.5;
+    font-weight: 600;
     padding: 5px 10px;
     border-bottom: 1px solid #ccc;
     text-transform: uppercase;
@@ -411,8 +415,9 @@ a {
     display: block;
     margin-left: 2px;
     margin-right: 2px;
-    font-size: 0.83rem;
+    font-size: 0.8rem;
     line-height: 1.5;
+    font-weight: 300;
     color: #fff;
 }
 
